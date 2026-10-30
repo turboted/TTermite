@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.32.0",
+      "date": "2026-10-30",
+      "baseRevision": "c7f570b1f5a4d9ad5ea4ac80e93e866013a9343b",
+      "endRevision": null,
+      "change": {
+        "id": "git-image-diff",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Git 圖片比較視圖",
+        "zh-Hans": "Git 图片比较视图",
+        "en": "Git image comparison view"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入 Git 圖片版本比較視圖，讓後續面板呈現文字差異之外的圖片變化；此版先提供視圖，讀取失敗或不支援格式時無法顯示圖片。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入 Git 图片版本比较视图，让后续面板展示文本差异之外的图片变化；本版先提供视图，读取失败或不支持格式时无法显示图片。"
+        ],
+        "en": [
+          "[Added] Add a Git image comparison view for later panels to show non-text changes; this introduces the view and unavailable or unsupported images cannot be displayed."
+        ]
+      }
+    },
+    {
       "version": "1.31.0",
       "date": "2026-10-30",
       "baseRevision": "98c4166556fc9aecd64283c54a43152a84d76387",
-      "endRevision": null,
+      "endRevision": "c7f570b1f5a4d9ad5ea4ac80e93e866013a9343b",
       "change": {
         "id": "git-diff-rendering",
         "category": "added"
