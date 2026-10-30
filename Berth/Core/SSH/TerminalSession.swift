@@ -67,6 +67,7 @@ final class TerminalSession: Identifiable {
     let spec: HostSpec
 
     private(set) var commandHistory: [CommandRecord] = []
+    var composerDraft: String?
     private var pendingCommandText = ""
     private var pendingPromptRow: Int?
     private var commandOrigin: (row: Int, col: Int)?
@@ -221,6 +222,20 @@ final class TerminalSession: Identifiable {
                 commandOrigin = (currentScrollInvariantRow(), terminal.buffer.x)
             }
         }
+    }
+
+    /// 浮层确认:⌃E+⌃U 清空 zle 当前缓冲,回填编辑后的命令(bracketed paste 保多行)
+    func applyComposedCommand(_ text: String, execute: Bool) {
+        composerDraft = nil
+        sendRawInput([0x05, 0x15]) // ⌃E 行尾 + ⌃U kill-whole-line
+        if terminalView.getTerminal().bracketedPasteMode {
+            sendText("\u{1b}[200~" + text + "\u{1b}[201~")
+        } else {
+            // 无括号粘贴时换行会逐行执行,降级为单行
+            sendText(text.replacingOccurrences(of: "\n", with: " "))
+        }
+        if execute { sendRawInput([0x0d]) }
+        focusTerminal()
     }
 
     /// 从命令起点(OSC 133 B 的行列)读到光标位置,折行拼接为逻辑行。

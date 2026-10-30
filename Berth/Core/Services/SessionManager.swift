@@ -11,6 +11,7 @@ import UniformTypeIdentifiers
 final class SessionManager {
     static let shared = SessionManager()
     let directoryJumper = CommandPaletteController()
+    let historySearch = CommandPaletteController()
 
     @ObservationIgnored private var wakeObserver: NSObjectProtocol?
 

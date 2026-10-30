@@ -1,4 +1,4 @@
-# TTermite v1.26.0
+# TTermite v1.27.0
 
 TTermite v1.0.0 基础功能总览
 

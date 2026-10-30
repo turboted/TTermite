@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.27.0",
+      "date": "2026-10-30",
+      "baseRevision": "b7336ab1ede88bd689e25dfc41d2e719a72f153d",
+      "endRevision": null,
+      "change": {
+        "id": "command-history-search-view",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "跨會話命令歷史搜尋視圖",
+        "zh-Hans": "跨会话命令历史搜索视图",
+        "en": "Cross-session command-history search view"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入持久化命令歷史搜尋視圖，選取結果會填回終端供編輯，不立即執行；本版先提供視圖與控制器，主視窗入口稍後接上，沒有有效會話時無法填回。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入持久化命令历史搜索视图，选择结果会填回终端以供编辑，不立即执行；本版先提供视图与控制器，主窗口入口稍后接入，没有有效会话时无法填回。"
+        ],
+        "en": [
+          "[Added] Add persistent command-history search whose selections populate the terminal for editing without immediate execution; the view/controller precedes its main-window entry and insertion requires a valid session."
+        ]
+      }
+    },
+    {
       "version": "1.26.0",
       "date": "2026-10-30",
       "baseRevision": "4bb20b25cc967b61e300f8134c3d4546adfdd966",
-      "endRevision": null,
+      "endRevision": "b7336ab1ede88bd689e25dfc41d2e719a72f153d",
       "change": {
         "id": "directory-jumper-view",
         "category": "added"
