@@ -3,12 +3,24 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.15.0",
+      "changeID": "local-shell-integration-hooks",
+      "originalRevision": "c3cb13e678c0c8d644038f4f1392dcc04c12a87c",
+      "previousReconstructionRevision": "e013109c5b1ac628edde0229db40164e435791f8",
+      "previousReconstructionVersion": "0.1.5",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/Core/Session/ShellIntegration.swift"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.14.0",
       "changeID": "command-output-line-diff",
       "originalRevision": "c3cb13e678c0c8d644038f4f1392dcc04c12a87c",
       "previousReconstructionRevision": "e013109c5b1ac628edde0229db40164e435791f8",
       "previousReconstructionVersion": "0.1.5",
-      "rebuildRevision": null,
+      "rebuildRevision": "7ee202e25b42d2ca1bdd042bd8559413e3d806f2",
       "paths": [
         "Berth/Core/Parsing/LineDiff.swift",
         "BerthTests/LineDiffTests.swift"

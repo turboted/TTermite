@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.15.0",
+      "date": "2026-10-30",
+      "baseRevision": "7ee202e25b42d2ca1bdd042bd8559413e3d806f2",
+      "endRevision": null,
+      "change": {
+        "id": "local-shell-integration-hooks",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "本機 Shell 整合掛鉤服務",
+        "zh-Hans": "本地 Shell 集成钩子服务",
+        "en": "Local shell integration hooks"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 提供 zsh／bash 的命令及目錄標記掛鉤，zsh 包裝器保留原本的使用者設定；本版尚未在終端啟動時自動注入，bash 的降級路徑不提供完整命令耗時。"
+        ],
+        "zh-Hans": [
+          "[新增] 提供 zsh／bash 的命令及目录标记钩子，zsh 包装器保留原有用户设置；本版尚未在终端启动时自动注入，bash 的降级路径不提供完整命令耗时。"
+        ],
+        "en": [
+          "[Added] Provide command and directory marker hooks for zsh and bash, preserving the original zsh configuration; automatic injection at terminal startup comes later and the bash fallback does not provide complete command timing."
+        ]
+      }
+    },
+    {
       "version": "1.14.0",
       "date": "2026-10-30",
       "baseRevision": "9fe99d2560ed8329710d7fffe48b6aa7543cfcbf",
-      "endRevision": null,
+      "endRevision": "7ee202e25b42d2ca1bdd042bd8559413e3d806f2",
       "change": {
         "id": "command-output-line-diff",
         "category": "added"
