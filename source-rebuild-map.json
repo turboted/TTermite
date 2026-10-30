@@ -3,12 +3,26 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.9.0",
+      "changeID": "terminal-file-link-services",
+      "originalRevision": "e6f68cf7cd30b7e839dbb3c01e8e8707edd4fe72",
+      "previousReconstructionRevision": "100be915e34a25df4d5cfb5cf11fe34a32f7e1db",
+      "previousReconstructionVersion": "0.1.4",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/Core/Terminal/EditorLauncher.swift",
+        "Berth/Core/Terminal/FileLinkDetector.swift",
+        "BerthTests/FileLinkDetectorTests.swift"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.8.0",
       "changeID": "local-directory-enumeration",
       "originalRevision": "e6f68cf7cd30b7e839dbb3c01e8e8707edd4fe72",
       "previousReconstructionRevision": "100be915e34a25df4d5cfb5cf11fe34a32f7e1db",
       "previousReconstructionVersion": "0.1.4",
-      "rebuildRevision": null,
+      "rebuildRevision": "3ca5d791974cd564e1b22b6d4a3d67d513b6ea11",
       "paths": [
         "Berth/Core/Services/FileBrowserService.swift"
       ],

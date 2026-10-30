@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.9.0",
+      "date": "2026-10-30",
+      "baseRevision": "3ca5d791974cd564e1b22b6d4a3d67d513b6ea11",
+      "endRevision": null,
+      "change": {
+        "id": "terminal-file-link-services",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "檔案連結解析與編輯器服務",
+        "zh-Hans": "文件链接解析与编辑器服务",
+        "en": "File-link parsing and editor launch services"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 解析終端輸出的檔案路徑、行與欄，並提供外部編輯器啟動服務；需要可解析的本機路徑，終端點擊事件會在後續版本接上。"
+        ],
+        "zh-Hans": [
+          "[新增] 解析终端输出中的文件路径、行与列，并提供外部编辑器启动服务；需要可解析的本地路径，终端点击事件会在后续版本接入。"
+        ],
+        "en": [
+          "[Added] Parse file paths, line numbers and columns from terminal output and provide external-editor launching; paths must resolve locally and terminal click handling is connected in a later version."
+        ]
+      }
+    },
+    {
       "version": "1.8.0",
       "date": "2026-10-30",
       "baseRevision": "db786bd9acf8a79e81409d88908341585db2ad93",
-      "endRevision": null,
+      "endRevision": "3ca5d791974cd564e1b22b6d4a3d67d513b6ea11",
       "change": {
         "id": "local-directory-enumeration",
         "category": "added"
