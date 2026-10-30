@@ -252,6 +252,7 @@ final class SessionManager {
 
     /// 点击某个 pane 聚焦它(可能在别的标签)
     func focusPane(_ sessionID: UUID) {
+        session(sessionID)?.clearAttention()
         guard let tab = tabs.first(where: { $0.root.leafIDs().contains(sessionID) }) else { return }
         // 主动去某个 pane = 要看终端,顺手从仪表盘退出来
         isDashboardVisible = false

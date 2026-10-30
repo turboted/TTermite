@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.18.0",
+      "date": "2026-10-30",
+      "baseRevision": "723d3f52582e06686043da7c33c0096eef151a69",
+      "endRevision": null,
+      "change": {
+        "id": "background-pane-attention",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "背景窗格等待與完成通知",
+        "zh-Hans": "后台窗格等待与完成通知",
+        "en": "Background pane attention notifications"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 追蹤背景窗格的命令完成、響鈴與持續輸出後的靜默，提示可能等待輸入的工作，聚焦或輸入後清除狀態；靜默只是啟發式判斷，可能誤判，仍受設定與通知權限限制。"
+        ],
+        "zh-Hans": [
+          "[新增] 跟踪后台窗格的命令完成、响铃与持续输出后的静默，提示可能等待输入的工作，聚焦或输入后清除状态；静默仅为启发式判断，可能误判，仍受设置与通知权限限制。"
+        ],
+        "en": [
+          "[Added] Track background command completion, bells and silence after sustained output to notify about work that may need input, clearing attention on focus or input; silence is a heuristic that can misclassify activity and notifications depend on settings and permissions."
+        ]
+      }
+    },
+    {
       "version": "1.17.0",
       "date": "2026-10-30",
       "baseRevision": "4a2d646e5f6458a17eedcdef44ecfe5ee7bd21a1",
-      "endRevision": null,
+      "endRevision": "723d3f52582e06686043da7c33c0096eef151a69",
       "change": {
         "id": "terminal-directory-history",
         "category": "added"

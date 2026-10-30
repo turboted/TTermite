@@ -70,6 +70,11 @@ final class TerminalSession: Identifiable {
     private var pendingCommandText = ""
     private var pendingPromptRow: Int?
     private var commandOrigin: (row: Int, col: Int)?
+    private(set) var attention: PaneAttention = .none
+    private(set) var attentionSince: Date?
+    private var silenceHeuristic = SilenceHeuristic()
+    private var silenceTask: Task<Void, Never>?
+    private var lastAttentionNotice = Date.distantPast
     var localWorkingDirectory: String? { spec.isLocal ? currentRemoteDirectory : nil }
     private(set) var gitBranch: String?
     func refreshGitInfo() { gitBranch = localWorkingDirectory.flatMap(GitProbe.branch) }
@@ -285,11 +290,39 @@ final class TerminalSession: Identifiable {
 
 
 
+    func clearAttention() { attention = .none; attentionSince = nil }
     private func noteTypedInput(_ bytes: [UInt8]) {
+        clearAttention()
         if !runningCommand, bytes.contains(0x0d), let captured = capturedCommandText(), !captured.isEmpty {
             pendingCommandText = captured
         }
         trackCommandOrigin(bytes)
+    }
+    private func setAttention(_ value: PaneAttention) {
+        guard UserDefaults.standard.object(forKey: SettingsKeys.attentionDetection) as? Bool ?? true,
+              SessionManager.shared.selectedID != id else { return }
+        if !attention.isActive { attentionSince = Date() }
+        attention = value
+        if value.needsInput, Date().timeIntervalSince(lastAttentionNotice) > 120,
+           UserDefaults.standard.object(forKey: SettingsKeys.notifyAttention) as? Bool ?? true {
+            lastAttentionNotice = Date()
+            NotificationService.post(title: spec.label, body: "工作可能正在等待輸入")
+        }
+    }
+    private func trackAttentionOutput() {
+        silenceHeuristic.recordOutput()
+        if attention.needsInput { clearAttention() }
+        silenceTask?.cancel()
+        guard runningCommand || terminalView.getTerminal().isCurrentBufferAlternate else { return }
+        silenceTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(6))
+            guard !Task.isCancelled, let self, self.silenceHeuristic.hadBusyStreak() else { return }
+            self.setAttention(.needsInput(fromBell: false))
+        }
+    }
+    private func finishAttention(code: Int?, duration: TimeInterval?) {
+        silenceTask?.cancel()
+        if (duration ?? 0) >= 5 { setAttention(.finished(failed: (code ?? 0) != 0)) }
     }
     private func recordRichCommand(start: Int, end: Int, code: Int?) {
         let raw = extractText(from: start, to: end)
@@ -1433,6 +1466,7 @@ final class TerminalSession: Identifiable {
 
     /// 输出统一入口(SSH 通道与本地 PTY 共用):OSC 133 扫描 → 喂终端 → 触发器/录制/通知
     func ingest(bytes: [UInt8]) {
+        trackAttentionOutput()
         noteOutputForNotification()
         // OSC 133 命令边界/退出码。必须先把标记之前的字节喂进终端,
         // 再读光标行,才能拿到与标记对齐的 scroll-invariant 位置(否则记到旧位置)。
@@ -1456,6 +1490,7 @@ final class TerminalSession: Identifiable {
                 lastCommandDuration = commandStartedAt.map { Date().timeIntervalSince($0) }
                 commandStartedAt = nil
                 recordCommandOutput(code: code)
+                finishAttention(code: code, duration: lastCommandDuration)
                 if let dir = localWorkingDirectory { DirectoryHistory.shared.record(path: dir) }
             case .promptStart:
                 runningCommand = false
@@ -1752,6 +1787,7 @@ extension TerminalSession: TerminalViewDelegate {
 
     nonisolated func bell(source: TerminalView) {
         MainActor.assumeIsolated {
+            setAttention(.needsInput(fromBell: true))
             let enabled = UserDefaults.standard.object(forKey: SettingsKeys.notifyLongCommand) as? Bool ?? true
             guard enabled, !NSApp.isActive else { return }
             if let lastNotified = lastNotifiedAt, Date().timeIntervalSince(lastNotified) < 30 { return }

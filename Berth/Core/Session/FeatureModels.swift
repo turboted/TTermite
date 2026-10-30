@@ -98,3 +98,62 @@ struct CommandRecord: Identifiable, Equatable {
     var hasOutput: Bool { outputEnd > outputStart }
     var succeeded: Bool { (exitCode ?? 0) == 0 }
 }
+
+
+// Adapted from Termite @ 95db043, GPL-3.0.
+enum PaneAttention: Equatable {
+    case none
+    /// 前台程序停下来等用户(fromBell:程序主动摇铃;否则为静默启发式判定)
+    case needsInput(fromBell: Bool)
+    /// 长命令在失焦 pane 跑完(failed:退出码非 0)
+    case finished(failed: Bool)
+
+    var needsInput: Bool {
+        if case .needsInput = self { return true }
+        return false
+    }
+
+    var isActive: Bool { self != .none }
+}
+
+/// 失焦 pane 命令结束时的一次性边框闪烁(绿=成功,红=失败)
+struct FinishFlash: Equatable {
+    let failed: Bool
+    let at: Date
+}
+
+/// 静默启发式:TUI(如 Claude Code)不发 OSC 133 提示符标记,无法直接知道它何时停下,
+/// 用「持续输出一段时间后突然静默」近似「停下来等输入」。
+/// vim 一类打开后就安静的程序不满足持续输出条件,不误报。
+struct SilenceHeuristic {
+    /// 输出间隔超过该值视为一段新输出(agent 干活时至少每秒都在刷屏)
+    var streakGap: TimeInterval = 2
+    /// 输出需持续这么久才算「在干活」(短促输出后的静默不算)
+    var minStreak: TimeInterval = 5
+    /// 静默达到该时长即判定「在等输入」
+    var silenceThreshold: TimeInterval = 6
+
+    private(set) var lastOutputAt: Date?
+    private(set) var streakStart: Date?
+
+    mutating func recordOutput(at now: Date = Date()) {
+        if let last = lastOutputAt, now.timeIntervalSince(last) <= streakGap {
+            if streakStart == nil { streakStart = last }
+        } else {
+            streakStart = now
+        }
+        lastOutputAt = now
+    }
+
+    /// 距静默判定点还差多久(≤0 即已达标;从未有输出返回 nil)
+    func remainingSilence(at now: Date = Date()) -> TimeInterval? {
+        guard let last = lastOutputAt else { return nil }
+        return silenceThreshold - now.timeIntervalSince(last)
+    }
+
+    /// 静默前的最后一段输出是否够长(证明之前真在干活)
+    func hadBusyStreak() -> Bool {
+        guard let start = streakStart, let last = lastOutputAt else { return false }
+        return last.timeIntervalSince(start) >= minStreak
+    }
+}
