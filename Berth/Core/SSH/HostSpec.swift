@@ -67,6 +67,9 @@ struct HostSpec: Equatable, Sendable {
     var isLocal: Bool = false
     /// 本地 Shell 的起始目录(支持 ~);空 = 家目录(issue #41)
     var localDirectory: String = ""
+    var serialDevice: String?
+    var serialBaud: Int = 115200
+    var serialLocalEcho = false
 
     init(
         hostID: UUID,

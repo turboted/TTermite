@@ -537,6 +537,12 @@ final class SessionManager {
         buildSplits(b, existingLeaf: secondary.id, in: tab, hosts: hosts)
     }
 
+    func newSerialTab(device: String, baud: Int, localEcho: Bool) {
+        var spec = HostSpec(hostID: UUID(), label: device, hostname: "", port: 0, username: "", authMethod: .password, privateKeyPath: nil)
+        spec.isLocal = true; spec.serialDevice = device; spec.serialBaud = baud; spec.serialLocalEcho = localEcho
+        open(spec: spec)
+    }
+
     // MARK: - 会话恢复
 
     private static let openTabsKey = "session.openTabs"

@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.19.0",
+      "date": "2026-10-30",
+      "baseRevision": "052d6178cee8ee1b8aaa65c824ca74118b9b6f83",
+      "endRevision": null,
+      "change": {
+        "id": "serial-session-lifecycle",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "串列終端連線生命週期",
+        "zh-Hans": "串口终端连接生命周期",
+        "en": "Serial terminal session lifecycle"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入裝置、鮑率與本機回音設定，將串列讀寫、EOF 和關閉處理接入終端會話；本版提供會話服務，對話框於後續接上，偽終端測試不能代替實體 UART 驗收。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入设备、波特率与本地回显设置，将串口读写、EOF 和关闭处理接入终端会话；本版提供会话服务，对话框于后续接入，伪终端测试不能替代实体 UART 验收。"
+        ],
+        "en": [
+          "[Added] Add device, baud and local-echo configuration and connect serial I/O, EOF and closure to terminal sessions; the dialog comes later and pseudo-terminal tests do not establish physical UART acceptance."
+        ]
+      }
+    },
+    {
       "version": "1.18.0",
       "date": "2026-10-30",
       "baseRevision": "723d3f52582e06686043da7c33c0096eef151a69",
-      "endRevision": null,
+      "endRevision": "052d6178cee8ee1b8aaa65c824ca74118b9b6f83",
       "change": {
         "id": "background-pane-attention",
         "category": "added"

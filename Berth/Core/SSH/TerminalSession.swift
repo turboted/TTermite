@@ -75,11 +75,15 @@ final class TerminalSession: Identifiable {
     private var silenceHeuristic = SilenceHeuristic()
     private var silenceTask: Task<Void, Never>?
     private var lastAttentionNotice = Date.distantPast
-    var localWorkingDirectory: String? { spec.isLocal ? currentRemoteDirectory : nil }
+    var localWorkingDirectory: String? { spec.isLocal && spec.serialDevice == nil ? currentRemoteDirectory : nil }
     private(set) var gitBranch: String?
     func refreshGitInfo() { gitBranch = localWorkingDirectory.flatMap(GitProbe.branch) }
     var workingDirectory: String? { currentRemoteDirectory }
     var historyHostKey: String { spec.isLocal ? "local" : "\(spec.username)@\(spec.hostname):\(spec.port)" }
+
+    var isSerial: Bool { spec.serialDevice != nil }
+    private var serialFD: Int32 = -1
+    private var serialWriter: FDWriter?
 
     let terminalView: BerthTerminalView
 
@@ -179,7 +183,7 @@ final class TerminalSession: Identifiable {
         CursorPrefs.apply(to: terminalView)
         terminalView.terminalDelegate = self
         view.focusSessionID = id
-        view.isLocalSession = spec.isLocal
+        view.isLocalSession = spec.isLocal && spec.serialDevice == nil
     }
 
     // MARK: - 连接复用
@@ -335,6 +339,36 @@ final class TerminalSession: Identifiable {
             exitCode: code, duration: lastCommandDuration, branch: localWorkingDirectory.flatMap(GitProbe.branch), hostKey: historyHostKey)
         pendingCommandText = ""
     }
+    private func runSerialSession() async throws {
+        guard let device = spec.serialDevice, let fd = SerialPort.open(path: device, baud: spec.serialBaud) else {
+            throw SessionError.localShellFailed(spec.serialDevice ?? "serial")
+        }
+        serialFD = fd
+        let writer = FDWriter(fd: fd, queue: .main)
+        serialWriter = writer
+        let source = DispatchSource.makeReadSource(fileDescriptor: fd, queue: .main)
+        source.setEventHandler { [weak self] in
+            var buffer = [UInt8](repeating: 0, count: 8192)
+            let count = Darwin.read(fd, &buffer, buffer.count)
+            if count > 0 { self?.ingest(bytes: Array(buffer.prefix(count))) }
+            else if count == 0 || (errno != EAGAIN && errno != EINTR) { self?.stdinWriter?.finish() }
+        }
+        source.resume()
+        let (stream, continuation) = AsyncStream.makeStream(of: StdinEvent.self)
+        stdinWriter = continuation
+        state = .connected
+        connectedAt = Date()
+        everConnected = true
+        defer { source.cancel(); writer.close(); Darwin.close(fd); serialFD = -1; serialWriter = nil; stdinWriter = nil }
+        for await event in stream {
+            if Task.isCancelled { return }
+            if case .bytes(let bytes) = event {
+                writer.write(Data(bytes))
+                if spec.serialLocalEcho { ingest(bytes: bytes) }
+            }
+        }
+    }
+
     // MARK: - 生命周期
 
     /// 可重入:disconnected 后再次调用即手动重连
@@ -356,7 +390,7 @@ final class TerminalSession: Identifiable {
             let caughtError: Error?
             do {
                 if spec.isLocal {
-                    try await runLocalSession()
+                    if spec.serialDevice != nil { try await runSerialSession() } else { try await runLocalSession() }
                 } else {
                     do {
                         try await runSession()
