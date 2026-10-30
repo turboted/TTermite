@@ -178,6 +178,7 @@ final class TerminalSession: Identifiable {
         let view = BerthTerminalView(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
         view.isProductionHost = spec.isProduction
         self.terminalView = view
+        view.session = self
         terminalView.font = TerminalFontPrefs.resolved()
         ThemeStore.shared.apply(to: terminalView)
         CursorPrefs.apply(to: terminalView)

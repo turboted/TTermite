@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.19.2",
+      "date": "2026-10-30",
+      "baseRevision": "3485df41597fe6e1e0010dc82d1b70c06d1d4710",
+      "endRevision": null,
+      "change": {
+        "id": "precise-terminal-scrolling",
+        "category": "improved"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "精確滾輪增量轉換",
+        "zh-Hans": "精确滚轮增量转换",
+        "en": "Precise terminal scrolling"
+      },
+      "noteCategories": [
+        "improved"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[優化] 將觸控板的精確像素增量累計為終端行數，減少速度階梯造成的突跳，並保留一般回捲、替代畫面和滑鼠回報模式；傳統滾輪仍走原路徑，實際效果取決於終端程式模式。"
+        ],
+        "zh-Hans": [
+          "[优化] 将触控板的精确像素增量累计为终端行数，减少速度阶梯造成的跳变，并保留普通回滚、替代屏幕和鼠标报告模式；传统滚轮仍沿用原路径，实际效果取决于终端程序模式。"
+        ],
+        "en": [
+          "[Improved] Accumulate precise trackpad pixels into terminal lines to reduce jumps from velocity steps while retaining scrollback, alternate-screen and mouse-reporting behavior; conventional wheels retain their existing path and behavior depends on terminal mode."
+        ]
+      }
+    },
+    {
       "version": "1.19.1",
       "date": "2026-10-30",
       "baseRevision": "e3a21c31e11844527b3eebb1fabeeab1263918ad",
-      "endRevision": null,
+      "endRevision": "3485df41597fe6e1e0010dc82d1b70c06d1d4710",
       "change": {
         "id": "cursor-blink-focus-and-input",
         "category": "improved"

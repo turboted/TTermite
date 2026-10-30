@@ -12,6 +12,8 @@ enum TerminalPasteEncoder {
 /// 终端视图子类:粘贴保护 —— 多行粘贴或含危险命令(sudo/rm -rf/dd/mkfs 等)先弹预览确认,
 /// 防止误粘贴直接执行。可在 设置 → 安全 关闭。
 final class BerthTerminalView: SwiftTerm.TerminalView {
+    weak var session: TerminalSession?
+    private var inputEnabled: Bool { if case .connected = session?.state { return true }; return false }
     /// 生产环境主机:任何粘贴都强制确认(不止多行/危险命令)
     var isProductionHost = false
     /// 本地 Shell 会话:粘贴文件/图片时转成本地路径写入命令行(SSH 会话无本地路径语义)
@@ -57,12 +59,14 @@ final class BerthTerminalView: SwiftTerm.TerminalView {
         // 表现为右侧空白条且看不到滚动位置(issue #8)。legacy 样式可正常绘制。
         scrollerStyle = .legacy
         subdueScroller()
+        _ = Self.smoothScrollMonitor
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         scrollerStyle = .legacy
         subdueScroller()
+        _ = Self.smoothScrollMonitor
     }
 
     /// legacy 滑块跟随 appearance 画成亮灰,深色主题近黑背景下太扎眼,整体压暗融入正文
@@ -81,6 +85,89 @@ final class BerthTerminalView: SwiftTerm.TerminalView {
             }
         }
         super.mouseDown(with: event)
+    }
+
+    private var scrollPixelAccumulator: CGFloat = 0
+
+    /// 进程内只装一次:命中终端视图(或其子视图,如 MTKView/滚动条)的滚轮事件
+    /// 交给平滑滚动处理,其余(侧边栏/设置页等)原样放行
+    private static let smoothScrollMonitor: Void = {
+        NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { event in
+            // 局部监视器总在主线程回调;NSEvent 非 Sendable,只让 Bool 跨隔离边界
+            nonisolated(unsafe) let event = event
+            let consumed = MainActor.assumeIsolated { () -> Bool in
+                guard let window = event.window,
+                      let hit = window.contentView?.hitTest(event.locationInWindow) else { return false }
+                var view: NSView? = hit
+                while let current = view {
+                    if let terminal = current as? BerthTerminalView {
+                        return terminal.handleSmoothScroll(event)
+                    }
+                    view = current.superview
+                }
+                return false
+            }
+            return consumed ? nil : event
+        }
+    }()
+
+    /// 返回 true 表示事件已消费(精确增量一律吞掉,防 SwiftTerm 原逻辑二次滚动);
+    /// false 放行给 SwiftTerm 原 scrollWheel(传统滚轮)
+    private func handleSmoothScroll(_ event: NSEvent) -> Bool {
+        guard UserDefaults.standard.object(forKey: SettingsKeys.smoothScrolling) as? Bool ?? true else { return false }
+        guard event.hasPreciseScrollingDeltas else {
+            scrollPixelAccumulator = 0
+            return false
+        }
+        // 新手势落指清掉上次残余,不让旧余量偷走第一行的行程
+        if event.phase == .began || event.phase == .mayBegin {
+            scrollPixelAccumulator = 0
+        }
+        let cellHeight = caretFrame.height
+        guard cellHeight > 0 else { return false }
+        scrollPixelAccumulator += event.scrollingDeltaY
+        let lines = Int(scrollPixelAccumulator / cellHeight)
+        if lines != 0 {
+            scrollPixelAccumulator -= CGFloat(lines) * cellHeight
+            deliverScroll(lines: lines, event: event)
+        }
+        return true
+    }
+
+    /// 与 SwiftTerm 原版 scrollWheel 相同的三分支(鼠标上报 TUI / 备用屏方向键 /
+    /// 普通缓冲区回滚),只是行数来自像素累计而非速度阶梯
+    private func deliverScroll(lines: Int, event: NSEvent) {
+        let terminal = getTerminal()
+        let up = lines > 0
+        let count = abs(lines)
+        let shiftBypasses = event.modifierFlags.contains(.shift) && !terminal.mouseShiftCapture
+        if allowMouseReporting, !shiftBypasses, terminal.mouseMode != .off {
+            guard inputEnabled else { return }
+            let cell = caretFrame.size
+            guard cell.width > 0, cell.height > 0 else { return }
+            let point = convert(event.locationInWindow, from: nil)
+            let col = max(0, min(terminal.cols - 1, Int(point.x / cell.width)))
+            let row = max(0, min(terminal.rows - 1, Int((frame.height - point.y) / cell.height)))
+            let flags = event.modifierFlags
+            let buttonFlags = terminal.encodeButton(
+                button: up ? 4 : 5, release: false,
+                shift: flags.contains(.shift), meta: flags.contains(.option), control: flags.contains(.control))
+            let pixelX = Int(min(max(point.x, 0), bounds.width))
+            let pixelY = Int(bounds.height - min(max(point.y, 0), bounds.height))
+            for _ in 0..<count {
+                terminal.sendEvent(buttonFlags: buttonFlags, x: col, y: row, pixelX: pixelX, pixelY: pixelY)
+            }
+        } else if terminal.isCurrentBufferAlternate {
+            guard inputEnabled else { return }
+            let arrow = up
+                ? (terminal.applicationCursor ? "\u{1b}OA" : "\u{1b}[A")
+                : (terminal.applicationCursor ? "\u{1b}OB" : "\u{1b}[B")
+            send(txt: String(repeating: arrow, count: count))
+        } else if up {
+            scrollUp(lines: count)
+        } else {
+            scrollDown(lines: count)
+        }
     }
 
     var blinkResumeDelay: TimeInterval = 0.7
