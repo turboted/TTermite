@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.33.0",
+      "date": "2026-10-30",
+      "baseRevision": "8a75e90744d3fdd7a2c717c4feea098bedcf3d7d",
+      "endRevision": null,
+      "change": {
+        "id": "git-blame-view",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "逐行 Git 歸屬視圖",
+        "zh-Hans": "逐行 Git 归属视图",
+        "en": "Git blame view"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入逐行提交歸屬視圖，可查看作者與提交資訊並載入相關差異；此版先提供視圖，入口稍後接入，結果依本機儲存庫可取得的歷史。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入逐行提交归属视图，可查看作者与提交信息并加载相关差异；本版先提供视图，入口稍后接入，结果取决于本地仓库可用历史。"
+        ],
+        "en": [
+          "[Added] Add line-by-line authorship and commit inspection with related diffs; this introduces the view before its entry point and depends on locally available repository history."
+        ]
+      }
+    },
+    {
       "version": "1.32.0",
       "date": "2026-10-30",
       "baseRevision": "c7f570b1f5a4d9ad5ea4ac80e93e866013a9343b",
-      "endRevision": null,
+      "endRevision": "8a75e90744d3fdd7a2c717c4feea098bedcf3d7d",
       "change": {
         "id": "git-image-diff",
         "category": "added"
