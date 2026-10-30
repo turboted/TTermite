@@ -78,3 +78,23 @@ enum StructuredOutputFormat: String {
     var label: String { self == .json ? "JSON" : String(localized: "表格") }
     var symbol: String { self == .json ? "curlybraces" : "tablecells" }
 }
+
+/// 一条完整的命令周期记录(OSC 133 C→D):驱动命令时间线面板
+struct CommandRecord: Identifiable, Equatable {
+    let id = UUID()
+    /// 命令行文本(提示符行..输出起始行的原样内容,含提示符前缀)
+    let commandText: String
+    /// 提示符所在 scroll-invariant 行(跳转定位用)
+    let promptRow: Int?
+    /// 输出区间 [outputStart, outputEnd)
+    let outputStart: Int
+    let outputEnd: Int
+    let exitCode: Int?
+    let duration: TimeInterval?
+    let finishedAt: Date
+    /// 输出嗅探出的结构化格式(驱动状态栏「查看」按钮)
+    var structured: StructuredOutputFormat?
+
+    var hasOutput: Bool { outputEnd > outputStart }
+    var succeeded: Bool { (exitCode ?? 0) == 0 }
+}

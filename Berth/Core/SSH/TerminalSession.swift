@@ -65,7 +65,16 @@ final class TerminalSession: Identifiable {
 
     let id = UUID()
     let spec: HostSpec
-    let terminalView: TerminalView
+
+    private(set) var commandHistory: [CommandRecord] = []
+    private var pendingCommandText = ""
+    private var pendingPromptRow: Int?
+    private var commandOrigin: (row: Int, col: Int)?
+    var localWorkingDirectory: String? { spec.isLocal ? currentRemoteDirectory : nil }
+    var workingDirectory: String? { currentRemoteDirectory }
+    var historyHostKey: String { spec.isLocal ? "local" : "\(spec.username)@\(spec.hostname):\(spec.port)" }
+
+    let terminalView: BerthTerminalView
 
     private(set) var state: State = .idle
     /// 最近一次连接建立的时间(用于 inspector 显示连接时长)
@@ -179,6 +188,118 @@ final class TerminalSession: Identifiable {
         willBorrow = connection
     }
 
+    private func trackCommandOrigin(_ bytes: [UInt8]) {
+        guard !runningCommand else { return }
+        var inEscape = false
+        for b in bytes {
+            if b == 0x1b { inEscape = true; continue }
+            if inEscape {
+                // CSI/SS3 的终结字节是字母或 ~,之前的参数字节一律跳过
+                if (0x40...0x7e).contains(b), b != 0x5b, b != 0x4f { inEscape = false }
+                continue
+            }
+            if b == 0x0d { continue }
+            if b == 0x03 {
+                commandOrigin = nil
+                continue
+            }
+            if commandOrigin == nil, b >= 0x20, b != 0x7f {
+                let terminal = terminalView.getTerminal()
+                guard !terminal.isCurrentBufferAlternate else { return }
+                commandOrigin = (currentScrollInvariantRow(), terminal.buffer.x)
+            }
+        }
+    }
+
+    /// 从命令起点(OSC 133 B 的行列)读到光标位置,折行拼接为逻辑行。
+    /// 末行在光标列截断:RPROMPT、autosuggestions 幽灵补全都渲染在光标之后,不能捞
+    private func capturedCommandText() -> String? {
+        guard let origin = commandOrigin else { return nil }
+        let terminal = terminalView.getTerminal()
+        let cursorRow = currentScrollInvariantRow()
+        guard cursorRow >= origin.row else { return nil }
+        var lines: [String] = []
+        for row in origin.row...cursorRow {
+            guard let line = terminal.getScrollInvariantLine(row: row) else { break }
+            let firstColumn = row == origin.row ? origin.col : 0
+            let lastColumn = row == cursorRow ? terminal.buffer.x : terminal.cols
+            let text = line.translateToString(trimRight: true, startCol: firstColumn, endCol: max(firstColumn, lastColumn), skipNullCellsFollowingWide: true)
+            lines.append(text)
+        }
+        // 屏幕折行是同一逻辑行,直接拼接
+        let text = lines.joined()
+        return text.trimmingCharacters(in: .whitespaces).isEmpty ? "" : text
+    }
+
+    /// ⌘K:清空回滚缓冲与屏幕(ED2 + ED3 + 归位),shell 下次重绘提示符
+
+    private func extractText(from start: Int, to end: Int) -> String {
+        guard start < end else { return "" }
+        let terminal = terminalView.getTerminal()
+        var lines: [String] = []
+        for row in start..<end {
+            guard let line = terminal.getScrollInvariantLine(row: row) else { continue }
+            lines.append(line.translateToString(trimRight: true))
+        }
+        while lines.last?.isEmpty == true { lines.removeLast() }
+        return lines.joined(separator: "\n")
+    }
+
+    /// 某条命令的完整输出文本(scrollback 修剪后可能已不可用 → nil)
+    func outputText(of record: CommandRecord) -> String? {
+        refreshScrollInvariantBounds()
+        let start = max(record.outputStart, siLower)
+        guard record.outputEnd > start else { return nil }
+        let text = extractText(from: start, to: record.outputEnd)
+        return text.isEmpty ? nil : text
+    }
+
+    /// 同一条命令上一次运行的记录(输出 Diff 用)
+    func previousRun(of record: CommandRecord) -> CommandRecord? {
+        guard !record.commandText.isEmpty,
+              let index = commandHistory.firstIndex(where: { $0.id == record.id }) else { return nil }
+        return commandHistory[..<index].last { $0.commandText == record.commandText && $0.hasOutput }
+    }
+
+    /// 复制某条命令的完整输出;返回是否成功
+    @discardableResult
+    func copyOutput(of record: CommandRecord) -> Bool {
+        guard let text = outputText(of: record) else { return false }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
+        return true
+    }
+
+
+    func scrollTo(record: CommandRecord) {
+        refreshScrollInvariantBounds()
+        let terminal = terminalView.getTerminal()
+        let row = record.promptRow ?? record.outputStart
+        guard row >= siLower else { return }
+        let maxScrollback = max((siUpper - siLower) - terminal.rows, 1)
+        let position = Double(row - siLower) / Double(maxScrollback)
+        terminalView.scroll(toPosition: min(max(position, 0), 1))
+    }
+
+
+
+    private func noteTypedInput(_ bytes: [UInt8]) {
+        if !runningCommand, bytes.contains(0x0d), let captured = capturedCommandText(), !captured.isEmpty {
+            pendingCommandText = captured
+        }
+        trackCommandOrigin(bytes)
+    }
+    private func recordRichCommand(start: Int, end: Int, code: Int?) {
+        let raw = extractText(from: start, to: end)
+        let record = CommandRecord(commandText: pendingCommandText, promptRow: pendingPromptRow,
+            outputStart: start, outputEnd: end, exitCode: code, duration: lastCommandDuration,
+            finishedAt: Date(), structured: StructuredOutput.detect(raw))
+        commandHistory.append(record)
+        if commandHistory.count > 200 { commandHistory.removeFirst(commandHistory.count - 200) }
+        CommandHistoryStore.shared.record(command: pendingCommandText, cwd: currentRemoteDirectory,
+            exitCode: code, duration: lastCommandDuration, branch: localWorkingDirectory.flatMap(GitProbe.branch), hostKey: historyHostKey)
+        pendingCommandText = ""
+    }
     // MARK: - 生命周期
 
     /// 可重入:disconnected 后再次调用即手动重连
@@ -508,6 +629,7 @@ final class TerminalSession: Identifiable {
     }
 
     func sendText(_ text: String) {
+        noteTypedInput(Array(text.utf8))
         stdinWriter?.yield(.bytes(Array(text.utf8)))
     }
 
@@ -582,6 +704,7 @@ final class TerminalSession: Identifiable {
 
     private func recordCommandMark() {
         let row = currentScrollInvariantRow()
+        pendingPromptRow = row
         if commandMarks.last != row {
             commandMarks.append(row)
             if commandMarks.count > 1000 { commandMarks.removeFirst(commandMarks.count - 1000) }
@@ -593,6 +716,7 @@ final class TerminalSession: Identifiable {
         guard let start = pendingOutputStart else { return }
         pendingOutputStart = nil
         let end = currentScrollInvariantRow()
+        recordRichCommand(start: start, end: end, code: code)
         guard end > start else { return }
         commandOutputs.append((start: start, end: end, code: code))
         if commandOutputs.count > 200 { commandOutputs.removeFirst(commandOutputs.count - 200) }
@@ -1306,7 +1430,7 @@ final class TerminalSession: Identifiable {
     }
 
     /// 输出统一入口(SSH 通道与本地 PTY 共用):OSC 133 扫描 → 喂终端 → 触发器/录制/通知
-    private func ingest(bytes: [UInt8]) {
+    func ingest(bytes: [UInt8]) {
         noteOutputForNotification()
         // OSC 133 命令边界/退出码。必须先把标记之前的字节喂进终端,
         // 再读光标行,才能拿到与标记对齐的 scroll-invariant 位置(否则记到旧位置)。
@@ -1318,8 +1442,9 @@ final class TerminalSession: Identifiable {
             }
             switch event {
             case .commandStart:
-                runningCommand = true
+                commandOrigin = (currentScrollInvariantRow(), terminalView.getTerminal().buffer.x)
             case .outputStart:
+                if let captured = capturedCommandText(), !captured.isEmpty { pendingCommandText = captured }
                 runningCommand = true
                 commandStartedAt = Date()
                 pendingOutputStart = currentScrollInvariantRow()
@@ -1330,6 +1455,8 @@ final class TerminalSession: Identifiable {
                 commandStartedAt = nil
                 recordCommandOutput(code: code)
             case .promptStart:
+                runningCommand = false
+                commandOrigin = nil
                 recordCommandMark()
             }
         }
@@ -1357,8 +1484,14 @@ final class TerminalSession: Identifiable {
         }
         let term = terminalView.getTerminal()
         var env = Terminal.getEnvironmentVariables(termName: "xterm-256color")
+        var inherited = ProcessInfo.processInfo.environment
+        if UserDefaults.standard.object(forKey: SettingsKeys.shellIntegration) as? Bool ?? true {
+            ShellIntegration.ensureInstalled()
+            ShellIntegration.apply(to: &inherited, shellPath: shell)
+        }
+        env = inherited.filter { !$0.key.hasPrefix("DYLD_") }.map { "\($0.key)=\($0.value)" } + env
         env.append("SHELL=\(shell)")
-        env.append("TERM_PROGRAM=Berth")
+        env.append("TERM_PROGRAM=TTermite")
         let directory = Self.localStartDirectory(spec.localDirectory)
         let pty: LocalPty
         do {
@@ -1551,6 +1684,7 @@ extension TerminalSession: TerminalViewDelegate {
                 connect()
                 return
             }
+            noteTypedInput(bytes)
             _ = stdinWriter?.yield(.bytes(bytes))
             // 半开连接上这几行等于石沉大海:静默够久之后的键入先记下,
             // 短时间没有回显就去探一次连接(见 runLivenessLoop)
@@ -1563,6 +1697,7 @@ extension TerminalSession: TerminalViewDelegate {
 
     /// 广播/自动化用:直接把字节写入本会话 stdin(不经过 terminalView)
     func sendRawInput(_ bytes: [UInt8]) {
+        noteTypedInput(bytes)
         _ = stdinWriter?.yield(.bytes(bytes))
     }
 

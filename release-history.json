@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.16.0",
+      "date": "2026-10-30",
+      "baseRevision": "f62b05d9815e8fc85d44d3483058a1d1fc7d637a",
+      "endRevision": null,
+      "change": {
+        "id": "terminal-command-capture",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "終端命令週期記錄",
+        "zh-Hans": "终端命令周期记录",
+        "en": "Capture terminal command cycles"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 將 Shell 整合掛鉤接入本機終端，依命令標記保存命令、輸出範圍、退出碼及耗時，並寫入主機分開的歷史資料；未提供標記的 Shell 無法取得同等資訊，畫面仍受回捲保留範圍限制。"
+        ],
+        "zh-Hans": [
+          "[新增] 将 Shell 集成钩子接入本地终端，按命令标记保存命令、输出范围、退出码及耗时，并写入按主机区分的历史数据；不提供标记的 Shell 无法获得同等信息，画面仍受回滚保留范围限制。"
+        ],
+        "en": [
+          "[Added] Connect shell hooks to local terminals and record marked commands, output ranges, exit codes and durations in host-specific history; shells without markers cannot provide equivalent details and retained output is bounded by scrollback."
+        ]
+      }
+    },
+    {
       "version": "1.15.0",
       "date": "2026-10-30",
       "baseRevision": "7ee202e25b42d2ca1bdd042bd8559413e3d806f2",
-      "endRevision": null,
+      "endRevision": "f62b05d9815e8fc85d44d3483058a1d1fc7d637a",
       "change": {
         "id": "local-shell-integration-hooks",
         "category": "added"
