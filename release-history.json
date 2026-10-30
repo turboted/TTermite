@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.17.0",
+      "date": "2026-10-30",
+      "baseRevision": "4a2d646e5f6458a17eedcdef44ecfe5ee7bd21a1",
+      "endRevision": null,
+      "change": {
+        "id": "terminal-directory-history",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "終端目錄事件接入造訪歷史",
+        "zh-Hans": "终端目录事件接入访问历史",
+        "en": "Record terminal directory changes"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 把終端回報的目錄與本機命令完成事件寫入造訪歷史，並更新本機 Git 分支資料；遠端目錄依主機分開，未回報目錄的 Shell 不會產生可靠的新記錄，跳轉器介面仍待接入。"
+        ],
+        "zh-Hans": [
+          "[新增] 把终端报告的目录与本地命令完成事件写入访问历史，并更新本地 Git 分支数据；远程目录按主机区分，不报告目录的 Shell 不会生成可靠的新记录，跳转器界面仍待接入。"
+        ],
+        "en": [
+          "[Added] Record reported terminal directories and local command completion in visit history and refresh local Git branch information; remote paths are separated by host, shells that omit directory reports cannot produce reliable new entries, and the jumper UI comes later."
+        ]
+      }
+    },
+    {
       "version": "1.16.0",
       "date": "2026-10-30",
       "baseRevision": "f62b05d9815e8fc85d44d3483058a1d1fc7d637a",
-      "endRevision": null,
+      "endRevision": "4a2d646e5f6458a17eedcdef44ecfe5ee7bd21a1",
       "change": {
         "id": "terminal-command-capture",
         "category": "added"

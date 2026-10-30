@@ -71,6 +71,8 @@ final class TerminalSession: Identifiable {
     private var pendingPromptRow: Int?
     private var commandOrigin: (row: Int, col: Int)?
     var localWorkingDirectory: String? { spec.isLocal ? currentRemoteDirectory : nil }
+    private(set) var gitBranch: String?
+    func refreshGitInfo() { gitBranch = localWorkingDirectory.flatMap(GitProbe.branch) }
     var workingDirectory: String? { currentRemoteDirectory }
     var historyHostKey: String { spec.isLocal ? "local" : "\(spec.username)@\(spec.hostname):\(spec.port)" }
 
@@ -1454,6 +1456,7 @@ final class TerminalSession: Identifiable {
                 lastCommandDuration = commandStartedAt.map { Date().timeIntervalSince($0) }
                 commandStartedAt = nil
                 recordCommandOutput(code: code)
+                if let dir = localWorkingDirectory { DirectoryHistory.shared.record(path: dir) }
             case .promptStart:
                 runningCommand = false
                 commandOrigin = nil
@@ -1737,6 +1740,8 @@ extension TerminalSession: TerminalViewDelegate {
             //(SFTP 面板整个 body 重算一轮)
             if let path, path != lastRemoteDirectory {
                 lastRemoteDirectory = path
+                DirectoryHistory.shared.record(path: path, hostKey: historyHostKey)
+                refreshGitInfo()
             }
         }
     }
