@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-10-30",
+      "baseRevision": "8c6c9d62c5f840d7c051cb4e1a5bf55de7f5526f",
+      "endRevision": null,
+      "change": {
+        "id": "git-repository-service",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Git 儲存庫服務",
+        "zh-Hans": "Git 仓库服务",
+        "en": "Git repository services"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 建立 Git 狀態、差異、提交與身分查詢服務，並可解析一般儲存庫與 worktree 的分支資訊，提供後續面板使用；本版只提供服務層，尚未接上 Git 操作面板。"
+        ],
+        "zh-Hans": [
+          "[新增] 建立 Git 状态、差异、提交与身份查询服务，并可解析普通仓库与 worktree 的分支信息，供后续面板使用；本版仅提供服务层，尚未接入 Git 操作面板。"
+        ],
+        "en": [
+          "[Added] Add repository status, diff, commit and identity services plus branch discovery for repositories and worktrees, preparing data for later panels; this version exposes the service layer without the Git UI."
+        ]
+      }
+    },
+    {
       "version": "1.1.0",
       "date": "2026-10-30",
       "baseRevision": "0ec9616864b858155e7ce19b3e25da39cb39da2a",
-      "endRevision": null,
+      "endRevision": "8c6c9d62c5f840d7c051cb4e1a5bf55de7f5526f",
       "change": {
         "id": "bundled-nerd-fonts",
         "category": "added"
