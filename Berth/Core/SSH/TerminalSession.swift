@@ -296,6 +296,7 @@ final class TerminalSession: Identifiable {
 
     func clearAttention() { attention = .none; attentionSince = nil }
     private func noteTypedInput(_ bytes: [UInt8]) {
+        terminalView.pauseCursorBlinkForInput()
         clearAttention()
         if !runningCommand, bytes.contains(0x0d), let captured = capturedCommandText(), !captured.isEmpty {
             pendingCommandText = captured

@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.19.1",
+      "date": "2026-10-30",
+      "baseRevision": "e3a21c31e11844527b3eebb1fabeeab1263918ad",
+      "endRevision": null,
+      "change": {
+        "id": "cursor-blink-focus-and-input",
+        "category": "improved"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "游標閃爍依焦點與輸入暫停",
+        "zh-Hans": "光标闪烁按焦点与输入暂停",
+        "en": "Pause cursor blinking for focus and input"
+      },
+      "noteCategories": [
+        "improved"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[優化] 讓失焦窗格的游標保持常亮，輸入期間暫停閃爍，回到焦點或停止輸入後恢復原樣式；若終端程式或設定已改變游標樣式，避免強行恢復過期樣式。"
+        ],
+        "zh-Hans": [
+          "[优化] 让失焦窗格的光标保持常亮，输入期间暂停闪烁，返回焦点或停止输入后恢复原样式；若终端程序或设置已改变光标样式，避免强行恢复过期样式。"
+        ],
+        "en": [
+          "[Improved] Keep unfocused cursors steady and pause blinking during input, restoring the prior style after focus or input settles; avoid restoring a stale style when a terminal program or settings changed it."
+        ]
+      }
+    },
+    {
       "version": "1.19.0",
       "date": "2026-10-30",
       "baseRevision": "052d6178cee8ee1b8aaa65c824ca74118b9b6f83",
-      "endRevision": null,
+      "endRevision": "e3a21c31e11844527b3eebb1fabeeab1263918ad",
       "change": {
         "id": "serial-session-lifecycle",
         "category": "added"

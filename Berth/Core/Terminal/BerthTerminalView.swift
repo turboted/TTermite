@@ -35,6 +35,12 @@ final class BerthTerminalView: SwiftTerm.TerminalView {
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
+        firstResponderObservation = window?.observe(\.firstResponder, options: [.new]) { [weak self] _, _ in
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.applyFocusCursorStyle(focused: self.window?.firstResponder === self)
+            }
+        }
         guard wantsFocusOnAttach, let window else { return }
         wantsFocusOnAttach = false
         // 挂载过程中别的视图(标签 chip 的事件层等)还可能抢一下,落定后再拿
@@ -75,6 +81,85 @@ final class BerthTerminalView: SwiftTerm.TerminalView {
             }
         }
         super.mouseDown(with: event)
+    }
+
+    var blinkResumeDelay: TimeInterval = 0.7
+    private var blinkRestoreWork: DispatchWorkItem?
+    private var blinkStyleToRestore: CursorStyle?
+
+    func pauseCursorBlinkForInput() {
+        let terminal = getTerminal()
+        let current = terminal.options.cursorStyle
+        if let saved = blinkStyleToRestore, Self.steadyVariant(of: saved) != current {
+            // 暂停期间样式被外部改过(TUI 的 DECSCUSR 或设置面板),放弃旧值按当前样式重新判断
+            blinkStyleToRestore = nil
+        }
+        if blinkStyleToRestore == nil {
+            guard let steady = Self.steadyVariant(of: current) else {
+                blinkRestoreWork?.cancel()
+                blinkRestoreWork = nil
+                return
+            }
+            blinkStyleToRestore = current
+            terminal.setCursorStyle(steady)
+        }
+        blinkRestoreWork?.cancel()
+        let work = DispatchWorkItem { [weak self] in self?.resumeCursorBlink() }
+        blinkRestoreWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + blinkResumeDelay, execute: work)
+    }
+
+    private func resumeCursorBlink() {
+        blinkRestoreWork = nil
+        guard let blink = blinkStyleToRestore else { return }
+        blinkStyleToRestore = nil
+        let terminal = getTerminal()
+        // 只在样式仍是我们换上的稳定样式时才换回;期间被外部改过就不抢
+        guard terminal.options.cursorStyle == Self.steadyVariant(of: blink) else { return }
+        terminal.setCursorStyle(blink)
+    }
+
+    private static func steadyVariant(of style: CursorStyle) -> CursorStyle? {
+        switch style {
+        case .blinkBlock: return .steadyBlock
+        case .blinkUnderline: return .steadyUnderline
+        case .blinkBar: return .steadyBar
+        default: return nil
+        }
+    }
+
+    // MARK: - 只有聚焦 pane 的光标闪烁
+
+    /// SwiftTerm 失焦时画空心光标,但闪烁定时器不看焦点,「灭」相位连空心框
+    /// 一起消失——多分屏时满屏光标齐闪。失焦把样式换成同形状常亮(Metal 的
+    /// 闪烁定时器随样式停掉),聚焦时还原。
+    private var focusStyleToRestore: CursorStyle?
+    /// becomeFirstResponder 在 SwiftTerm 里是 public 不可再覆写,
+    /// 改为 KVO 窗口 firstResponder(SwiftTerm 的 override 先跑,hasFocus 已就绪)
+    private var firstResponderObservation: NSKeyValueObservation?
+
+    /// internal 供测试直接驱动(单测里视图不在真实响应者链上)
+    func applyFocusCursorStyle(focused: Bool) {
+        let terminal = getTerminal()
+        // 两套「临时常亮」机制不叠加:焦点切换时先结清输入暂停态,
+        // 真正的闪烁样式若被暂停机制存着,从那里取回
+        blinkRestoreWork?.cancel()
+        blinkRestoreWork = nil
+        let pausedBlink = blinkStyleToRestore
+        blinkStyleToRestore = nil
+        if focused {
+            guard let saved = focusStyleToRestore else { return }
+            focusStyleToRestore = nil
+            // 失焦期间样式被外部(TUI 的 DECSCUSR)改过就不抢
+            if terminal.options.cursorStyle == Self.steadyVariant(of: saved) {
+                terminal.setCursorStyle(saved)
+            }
+        } else {
+            let current = pausedBlink ?? terminal.options.cursorStyle
+            guard let steady = Self.steadyVariant(of: current) else { return }
+            focusStyleToRestore = current
+            terminal.setCursorStyle(steady)
+        }
     }
 
     // MARK: - 右键菜单(复制/粘贴 + 分屏)
