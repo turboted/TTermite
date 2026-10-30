@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.24.0",
+      "date": "2026-10-30",
+      "baseRevision": "c13adfaf694fe0020bd83ff3a843c9eef60ed6c6",
+      "endRevision": null,
+      "change": {
+        "id": "structured-output-view",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "結構化輸出視圖",
+        "zh-Hans": "结构化输出视图",
+        "en": "Structured output view"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入 JSON 與分隔欄位資料的閱讀視圖，供後續終端檢視入口使用；此版先提供視圖，資料解析與預覽數量有上限，仍需命令保留可讀取的輸出。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入 JSON 与分隔字段数据的阅读视图，供后续终端查看入口使用；本版先提供视图，数据解析与预览数量有上限，仍需命令保留可读取的输出。"
+        ],
+        "en": [
+          "[Added] Add views for JSON and delimited output for later terminal inspection actions; this version introduces the views with parsing/preview bounds and requires command output still retained in scrollback."
+        ]
+      }
+    },
+    {
       "version": "1.23.0",
       "date": "2026-10-30",
       "baseRevision": "f2cf919b67ac90e7d512bf747c397ca5249050df",
-      "endRevision": null,
+      "endRevision": "c13adfaf694fe0020bd83ff3a843c9eef60ed6c6",
       "change": {
         "id": "command-output-diff-view",
         "category": "added"
