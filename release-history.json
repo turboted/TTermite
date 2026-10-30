@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.31.0",
+      "date": "2026-10-30",
+      "baseRevision": "98c4166556fc9aecd64283c54a43152a84d76387",
+      "endRevision": null,
+      "change": {
+        "id": "git-diff-rendering",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Git 差異共用渲染元件",
+        "zh-Hans": "Git 差异共用渲染组件",
+        "en": "Shared Git diff rendering"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入 Git 差異渲染元件，呈現區塊、雙欄行號及行內增刪強調，供後續 Git 視圖共用；此版先提供元件，長行以橫向捲動閱讀。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入 Git 差异渲染组件，显示区块、双列行号及行内增删强调，供后续 Git 视图共用；本版先提供组件，长行通过横向滚动阅读。"
+        ],
+        "en": [
+          "[Added] Add shared Git diff rendering with hunk headers, paired line numbers and intraline emphasis for later Git views; this introduces components, with long lines read by horizontal scrolling."
+        ]
+      }
+    },
+    {
       "version": "1.30.0",
       "date": "2026-10-30",
       "baseRevision": "edbaa498ac492df5e035a44265d245522f924109",
-      "endRevision": null,
+      "endRevision": "98c4166556fc9aecd64283c54a43152a84d76387",
       "change": {
         "id": "open-local-folder-events",
         "category": "added"

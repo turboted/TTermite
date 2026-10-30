@@ -3,12 +3,22 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.31.0",
+      "changeID": "git-diff-rendering",
+      "originalRevision": "6f1802a4748410002d221e49cf493998dd3458b2",
+      "previousReconstructionRevision": "a1f47c4041840f87334ab7780c797e0dc047e9cd",
+      "previousReconstructionVersion": "0.1.9",
+      "rebuildRevision": null,
+      "paths": [],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.30.0",
       "changeID": "open-local-folder-events",
       "originalRevision": "933331583ea144d84107368201d4dfcfd84d860b",
       "previousReconstructionRevision": "0ecf5c5422aa7a067ad5376aa5db32217fe3be6b",
       "previousReconstructionVersion": "0.1.8",
-      "rebuildRevision": null,
+      "rebuildRevision": "98c4166556fc9aecd64283c54a43152a84d76387",
       "paths": [],
       "status": "awaitingIndependentValidation"
     },
