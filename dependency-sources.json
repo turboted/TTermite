@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "packages": [
+    {
+      "identity": "bigint",
+      "sourceURL": "https://github.com/attaswift/BigInt.git",
+      "revision": "e07e00fa1fd435143a2dcf8b7eec9a7710b2fdfe",
+      "version": "5.7.0",
+      "tree": "fa7fea0ea1791d224d1969894c810368caea42e2",
+      "archive": "vendor/LockedSwiftPM/bigint.zip",
+      "sha256": "6a6776c767471a5c0667ef907d2f32dd385ede59e17be3f601bd856fd279dba8",
+      "bytes": 435765,
+      "tags": {
+        "v5.7.0": "e07e00fa1fd435143a2dcf8b7eec9a7710b2fdfe"
+      }
+    },
+    {
+      "identity": "swift-argument-parser",
+      "sourceURL": "https://github.com/apple/swift-argument-parser",
+      "revision": "6a52f3251125d74daf04fcbd5e6f08a75d074382",
+      "version": "1.8.2",
+      "tree": "f2352f1593c3d1dffeae2d21fb206ea1e77910dd",
+      "archive": "vendor/LockedSwiftPM/swift-argument-parser.zip",
+      "sha256": "a6d251bf2cf256f08936b953ff07bae919c85a2a75391a2b235f1ba81c859a40",
+      "bytes": 805134,
+      "tags": {
+        "1.8.2": "6a52f3251125d74daf04fcbd5e6f08a75d074382"
+      }
+    },
+    {
+      "identity": "swift-asn1",
+      "sourceURL": "https://github.com/apple/swift-asn1.git",
+      "revision": "3b6410f7dee09eb33cdd26260c5fd47fda19b0e2",
+      "version": "1.7.3",
+      "tree": "e7ed2e8c1483426c349b678e7d10940509f9d39c",
+      "archive": "vendor/LockedSwiftPM/swift-asn1.zip",
+      "sha256": "5d79b3a200e07970c62c89110dd5b84f7b94a876ce03c634bc6cddc1d566a57d",
+      "bytes": 385879,
+      "tags": {
+        "1.7.3": "3b6410f7dee09eb33cdd26260c5fd47fda19b0e2"
+      }
+    },
+    {
+      "identity": "swift-atomics",
+      "sourceURL": "https://github.com/apple/swift-atomics.git",
+      "revision": "0442cb5a3f98ab802acb777929fdb446bda11a34",
+      "version": "1.3.1",
+      "tree": "bd87231b7bb5519c91bdbc2f57b78704bc7d05cb",
+      "archive": "vendor/LockedSwiftPM/swift-atomics.zip",
+      "sha256": "bd22867b3416023de67ff07a11b0e5918bb959a6baaca90da3bb2c807994649d",
+      "bytes": 191440,
+      "tags": {
+        "1.3.1": "0442cb5a3f98ab802acb777929fdb446bda11a34"
+      }
+    },
+    {
+      "identity": "swift-collections",
+      "sourceURL": "https://github.com/apple/swift-collections.git",
+      "revision": "671108c96644956dddcd89dd59c203dcdb36cec7",
+      "version": "1.1.4",
+      "tree": "2d25648fc369386ad3e31161d87a28d17ff4d22e",
+      "archive": "vendor/LockedSwiftPM/swift-collections.zip",
+      "sha256": "5dc4704c58afa3407450973647e8bd85dbcb8c34d5f8bdf639f80904616ae760",
+      "bytes": 5866581,
+      "tags": {
+        "1.1.4": "671108c96644956dddcd89dd59c203dcdb36cec7"
+      }
+    },
+    {
+      "identity": "swift-crypto",
+      "sourceURL": "https://github.com/apple/swift-crypto.git",
+      "revision": "95ba0316a9b733e92bb6b071255ff46263bbe7dc",
+      "version": "3.15.1",
+      "tree": "6c96986047e188c4cad5432a3f699908c52af245",
+      "archive": "vendor/LockedSwiftPM/swift-crypto.zip",
+      "sha256": "fc3e30b7d2a897b12442432c269da392eb360f928c7a8cc1d0545eec67a6dccf",
+      "bytes": 7087832,
+      "tags": {
+        "3.15.1": "95ba0316a9b733e92bb6b071255ff46263bbe7dc"
+      }
+    },
+    {
+      "identity": "swift-log",
+      "sourceURL": "https://github.com/apple/swift-log.git",
+      "revision": "c9c6bb9d275ec0d95c3ad16391f3f045dc623104",
+      "version": "1.16.2",
+      "tree": "6224c92b23ed0e19f6bbb75d27117d15ff0df13a",
+      "archive": "vendor/LockedSwiftPM/swift-log.zip",
+      "sha256": "4fadef05fa416f155728190526c5d5f255cd311a526ce4332cf9614aa3a307e5",
+      "bytes": 149669,
+      "tags": {
+        "1.16.2": "c9c6bb9d275ec0d95c3ad16391f3f045dc623104"
+      }
+    },
+    {
+      "identity": "swift-nio",
+      "sourceURL": "https://github.com/apple/swift-nio.git",
+      "revision": "c51907a839e63ebf0ba2076bba73dd96436bd1b9",
+      "version": "2.81.0",
+      "tree": "6ea6a6e4cdad539c2a703b8a0f9885e13b52ad56",
+      "archive": "vendor/LockedSwiftPM/swift-nio.zip",
+      "sha256": "0f8a815f32b583315ac277fdcbbb50d9781298e7feb29fccf5ea68663da444a1",
+      "bytes": 1476969,
+      "tags": {
+        "2.81.0": "c51907a839e63ebf0ba2076bba73dd96436bd1b9"
+      }
+    },
+    {
+      "identity": "swift-system",
+      "sourceURL": "https://github.com/apple/swift-system.git",
+      "revision": "869129b7bf4ecc57b97d0193ad29690ca2134750",
+      "version": "1.8.1",
+      "tree": "6fbefb3e815f43ea04642e5bc578de05a4b38ada",
+      "archive": "vendor/LockedSwiftPM/swift-system.zip",
+      "sha256": "f993fdf36d79e48fe0228e1e2465cd8a54fefd99b3e1f8f655ccd737a0bb1799",
+      "bytes": 189081,
+      "tags": {
+        "1.8.1": "869129b7bf4ecc57b97d0193ad29690ca2134750"
+      }
+    },
+    {
+      "identity": "swiftterm",
+      "sourceURL": "https://github.com/migueldeicaza/SwiftTerm.git",
+      "revision": "849e8a4f3d6f79ddee07152400137f1370c32621",
+      "version": "1.14.0",
+      "tree": "a65cac84ac1233d3efc5c207d15ced0c3b4feb7e",
+      "archive": "vendor/LockedSwiftPM/swiftterm.zip",
+      "sha256": "bce49705761d6fb6c41f897abe8c497cf0126e3702bafd9ddd012b3b359718a8",
+      "bytes": 1744327,
+      "tags": {
+        "v1.14.0": "849e8a4f3d6f79ddee07152400137f1370c32621"
+      }
+    }
+  ],
+  "lockSHA256": "40e575ac4f5a7e338d79ed5f495a92fcc4a01b7ea6c28609152840b5a3fd665a",
+  "description": "Vendored public Git object snapshots at exact locked revisions; no compiler products, personal configuration or private state."
+}

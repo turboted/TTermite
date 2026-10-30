@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Berth — native SSH client for macOS</title>
+<meta name="description" content="Berth is a Swift-native SSH client for macOS: Metal rendering, connection reuse, infinite split panes. Secrets live in your Keychain — nothing leaves your Mac.">
+<link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+<link rel="stylesheet" href="styles.css">
+<script>
+// 首访按浏览器语言跳中文版;手动切换过语言则尊重偏好
+(function () {
+  try {
+    var pref = localStorage.getItem('berth-lang')
+    if (/\/zh\//.test(location.pathname)) return
+    if (pref === 'zh' || (!pref && /^zh/i.test(navigator.language))) location.replace('zh/')
+  } catch (e) {}
+})()
+</script>
+</head>
+<body>
+
+<div class="cove">
+<div class="sea" aria-hidden="true"></div>
+
+<nav class="nav">
+  <a class="nav-brand" href="./">
+    <img src="assets/icon.svg" alt="" width="28" height="28">
+    <span class="brand-name">Berth</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#themes">Themes</a>
+    <a href="#security">Security</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a class="nav-gh" href="https://github.com/xinghelee/Berth" aria-label="Berth on GitHub" title="GitHub">
+    <svg width="19" height="19" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+  </a>
+  <a class="nav-lang" href="zh/" data-lang-switch="zh">中文</a>
+  <a class="btn btn-primary nav-cta" href="https://github.com/xinghelee/Berth/releases/latest">Download</a>
+</nav>
+
+<header class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">Native SSH client · macOS 15+</p>
+    <h1>SSH,<br>the Mac way<span class="cursor" aria-hidden="true"></span></h1>
+    <p class="hero-sub">
+      Swift-native, Metal-rendered. Connection reuse and infinite split panes.
+      Passwords and keys live in your Keychain — nothing ever leaves your Mac.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://github.com/xinghelee/Berth/releases/latest">Download Berth</a>
+      <a class="btn btn-ghost" href="#features">Explore features</a>
+    </div>
+    <p class="hero-note" data-release-note>v1.9.14 · macOS 15+ · Universal · Developer ID signed &amp; notarized</p>
+  </div>
+
+  <!-- Signature: the app window as a lamp moored for the night, light pooling beneath -->
+  <div class="harbor">
+    <img class="app-shot" src="assets/shots/terminal-htop-1.9.2.png" width="3456" height="2160"
+         alt="Berth main window: a redacted demo host showing fastfetch and htop in split panes">
+    <div class="reflection" aria-hidden="true"><i></i><i></i><i></i></div>
+  </div>
+</header>
+</div><!-- /cove -->
+
+<main>
+
+<section class="features" id="features">
+  <p class="eyebrow">Features</p>
+  <h2>Everything a terminal veteran expects, all native</h2>
+  <div class="feature-grid">
+    <article class="card">
+      <h3>Server dashboard</h3>
+      <p>⌘0 puts every host on one screen: CPU, memory, disk, network and load, each with a CPU trend. Hosts with an open terminal reuse that connection, and polling never throws a dialog at you.</p>
+    </article>
+    <article class="card">
+      <h3>AI assistant on your server</h3>
+      <p>⌘⇧A opens a chat panel; the AI runs commands on the current session with per-command approval. 23 providers built in — Anthropic, OpenAI, Fireworks AI, DeepSeek to Ollama. Keys stay in your Keychain.</p>
+    </article>
+    <article class="card">
+      <h3>Connection reuse &amp; infinite splits</h3>
+      <p>⌘T tabs and ⌘D splits share one SSH channel — no second handshake. Nest splits without limit; <code>exit</code> collapses the pane.</p>
+    </article>
+    <article class="card">
+      <h3>Jump hosts &amp; port forwarding</h3>
+      <p>Chain jump hosts end to end. Local, remote and dynamic SOCKS5 forwarding, plus HTTP and SOCKS5 proxies outbound.</p>
+    </article>
+    <article class="card">
+      <h3>Keys &amp; Touch ID</h3>
+      <p>Generate or import keys. Touch ID verifies once per host per launch before a private key is used, and again after 15 idle minutes or when credentials change. known_hosts pinning with loud alerts on fingerprint changes.</p>
+    </article>
+    <article class="card">
+      <h3>SFTP file panel</h3>
+      <p>Rides the session connection. Drag-and-drop transfers, edit remote files in your local editor with auto write-back, chmod, bookmarks, previews.</p>
+    </article>
+    <article class="card">
+      <h3>Calm about disconnects</h3>
+      <p>Auto-reconnect with exponential backoff, straight back to your working directory (OSC 7). Exit codes marked inline (OSC 133). Command highlighting and shell integration install on the remote with one click from ⌘I or ⌘P.</p>
+    </article>
+    <article class="card">
+      <h3>Production guardrails</h3>
+      <p>Per-host alert colors, so prod never looks like staging. Broadcast input across sessions; snippets with {{variables}}.</p>
+    </article>
+  </div>
+</section>
+
+<section class="shortcuts">
+  <p class="eyebrow">Keyboard first</p>
+  <h2>Hands stay on the keys</h2>
+  <div class="kbd-strip">
+    <span><kbd>⌘K</kbd> Quick connect</span>
+    <span><kbd>⌘P</kbd> Command palette</span>
+    <span><kbd>⌘D</kbd> Split pane</span>
+    <span><kbd>⌘⌥B</kbd> Broadcast input</span>
+    <span><kbd>⌘I</kbd> Server info</span>
+    <span><kbd>⌘F</kbd> Search</span>
+    <span><kbd>⌘⇧A</kbd> AI assistant</span>
+  </div>
+  <p class="shortcuts-note">Every Ctrl combo passes through to the shell — your Emacs and readline habits stay intact.</p>
+</section>
+
+<section class="themes" id="themes">
+  <p class="eyebrow">Themes</p>
+  <h2>Twenty built-in themes, four crafted in-house</h2>
+  <p class="themes-lede">Nord, Dracula, Catppuccin, Solarized and friends ship built in — the screenshots above wear Emerald. Four themes are crafted just for Berth:</p>
+  <div class="theme-grid">
+    <figure class="theme-card" style="--tc-bg:#1E1A17; --tc-fg:#E9E2D7; --tc-ac:#FFC383">
+      <div class="theme-swatch">
+        <span class="ts-prompt">❯</span> make deploy
+        <span class="ts-dots"><i style="background:#D9837A"></i><i style="background:#9DB489"></i><i style="background:#E2B778"></i><i style="background:#8CA7C4"></i><i style="background:#C393B4"></i><i style="background:#8CBBAF"></i></span>
+      </div>
+      <figcaption><b>Amber Mooring</b><span>A single accent for late nights in port</span></figcaption>
+    </figure>
+    <figure class="theme-card" style="--tc-bg:#1B1817; --tc-fg:#E8E1D2; --tc-ac:#D96A54">
+      <div class="theme-swatch">
+        <span class="ts-prompt">❯</span> make deploy
+        <span class="ts-dots"><i style="background:#C75C4E"></i><i style="background:#85A25A"></i><i style="background:#C7A23C"></i><i style="background:#6E9BC8"></i><i style="background:#C4799F"></i><i style="background:#5FAFA3"></i></span>
+      </div>
+      <figcaption><b>Sumi</b><span>Warm charcoal with mineral pigments</span></figcaption>
+    </figure>
+    <figure class="theme-card" style="--tc-bg:#F8F3E6; --tc-fg:#3B342C; --tc-ac:#B4463A">
+      <div class="theme-swatch">
+        <span class="ts-prompt">❯</span> make deploy
+        <span class="ts-dots"><i style="background:#A63D33"></i><i style="background:#5E7233"></i><i style="background:#9A7514"></i><i style="background:#2F5F94"></i><i style="background:#9C3F72"></i><i style="background:#23766C"></i></span>
+      </div>
+      <figcaption><b>Xuan</b><span>Sumi's paper-light counterpart</span></figcaption>
+    </figure>
+    <figure class="theme-card" style="--tc-bg:#0D1712; --tc-fg:#E4F4EA; --tc-ac:#3DE3A0">
+      <div class="theme-swatch">
+        <span class="ts-prompt">❯</span> make deploy
+        <span class="ts-dots"><i style="background:#F16581"></i><i style="background:#52DE74"></i><i style="background:#E5C158"></i><i style="background:#64A8F7"></i><i style="background:#C687F0"></i><i style="background:#38D9C8"></i></span>
+      </div>
+      <figcaption><b>Emerald</b><span>Gemstone accents, strongest contrast of the set</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="security" id="security">
+  <p class="eyebrow">Security</p>
+  <h2>Two hard rules, built into the architecture</h2>
+  <ul class="security-list">
+    <li>
+      <h3>Secrets stay in Keychain</h3>
+      <p>Passwords, passphrases and private keys live in the macOS Keychain — never written to disk in plain text. JSON backups carry host structure only, no secrets.</p>
+    </li>
+    <li>
+      <h3>Everything stays local</h3>
+      <p>No account, no cloud. Your host list lives on your Mac, syncs both ways with ssh_config, and moves with you any time.</p>
+    </li>
+  </ul>
+</section>
+
+<section class="faq" id="faq">
+  <p class="eyebrow">FAQ</p>
+  <h2>Common questions</h2>
+  <dl class="faq-list">
+    <div>
+      <dt>Which systems are supported?</dt>
+      <dd>macOS 15 Sequoia or later. Ships as a universal binary — Apple Silicon and Intel.</dd>
+    </div>
+    <div>
+      <dt>Where are my passwords stored?</dt>
+      <dd>In the macOS Keychain only, encrypted by the system. Berth has no servers — there is nowhere to upload them to.</dd>
+    </div>
+    <div>
+      <dt>Will my hosts sync across devices?</dt>
+      <dd>CloudKit sync is on the roadmap — still no servers of ours; the data only ever lives in your iCloud.</dd>
+    </div>
+  </dl>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-brand">
+    <img src="assets/icon.svg" alt="" width="22" height="22">
+    <span>Berth — moor every connection.</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://github.com/xinghelee/Berth">GitHub</a>
+    <a href="mailto:hi@xinghelee.com">Contact</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <p class="footer-fine">© 2026 Berth. macOS is a trademark of Apple Inc.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

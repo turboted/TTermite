@@ -1,0 +1,40 @@
+Original source: https://github.com/jloughry/Unicode/blob/master/README.md
+Section: Copyright of the Symbols
+Original excerpt follows without modification:
+
+Copyright of the Symbols<a name="update20140115"/>
+------------------------
+
+[Alex Stapleton](https://twitter.com/alexstapleton) in
+[this conversation](https://twitter.com/alexstapleton/status/407468582860111873)
+on Twitter checked the introduction of IEC 60417 for copyright information and
+vector drawings of the symbols.
+
+The [SVG](http://en.wikipedia.org/wiki/Svg) files for the symbols in the table
+are public domain.
+
+You know, it's
+[really hard](http://graphicdesign.stackexchange.com/questions/8586/can-i-freely-use-the-fire-exit-symbol-and-similar-iso-symbols)
+to find a straight answer to the question of whether ISO standard symbols are
+copyrighted by ISO. Evidently, they are not, but the standard *doesn't say so*.
+
+Here is what I think the law says:
+
+- Everyone is encouraged to make their things compliant with relevant and current
+ISO standards.
+
+- To do so, makers need a copy of the standard; they can purchase it from ISO.
+
+- Copyright of the standard document itself belongs to ISO, so pirating standards
+documents is a no-no.
+
+- But there is no royalty cost or anything like that on things made according to
+the standard.
+
+I have been unable so far to find a clear statement anywhere that **making things
+that are compliant with an ISO standard** is allowed. It's probably buried in the
+ISO by-laws.
+
+I'm not going to worry about it. The Unicode Technical Committee undoubtedly has
+thought about this before and probably knows the answer.
+

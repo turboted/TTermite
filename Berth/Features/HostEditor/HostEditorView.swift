@@ -1,0 +1,653 @@
+import SwiftData
+import SwiftUI
+import UniformTypeIdentifiers
+
+/// 新建/编辑主机表单。凭据只写 Keychain;编辑时密码留空表示保持不变。
+/// M2 增加:粘贴 ssh 命令快速解析、SSHKey 实体选择。
+struct HostEditorView: View {
+    let host: Host?
+    let defaultGroupID: UUID?
+    /// 「保存并连接」的自定义连接动作(如断线卡片:关掉失败会话再连);nil = 新开标签页连接
+    var onConnect: ((Host) -> Void)? = nil
+    /// 普通「保存」后的动作(issue #11:断线卡片进来的编辑,保存也要立即对失败会话生效)
+    var onSave: ((Host) -> Void)? = nil
+    /// 创建副本(issue #36):保存时把这台源主机 Keychain 里的密码/passphrase/代理密码/su 密码
+    /// 复制到新主机 id 下,表单里留空即沿用;nil = 普通新建/编辑
+    var secretsSourceHostID: UUID? = nil
+    /// 新建时预选「本地 Shell」类型(侧栏/⌘P 的「新建本地 Shell…」入口)
+    var startsAsLocalShell = false
+
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @Query(sort: \HostGroup.sortOrder) private var groups: [HostGroup]
+    @Query(sort: \SSHKeyRecord.createdAt, order: .reverse) private var storedKeys: [SSHKeyRecord]
+    @Query(sort: \Host.label) private var allHosts: [Host]
+
+    @State private var label = ""
+    @State private var hostname = ""
+    @State private var port = "22"
+    @State private var username = ""
+    @State private var authMethod: AuthMethodKind = .password
+    @State private var password = ""
+    @State private var privateKeyPath = ""
+    @State private var passphrase = ""
+    @State private var selectedKeyID: UUID?
+    @State private var groupID: UUID?
+    @State private var jumpHostID: UUID?
+    @State private var proxyKind: ProxyKind = .none
+    @State private var proxyHost = ""
+    @State private var proxyPort = "1080"
+    @State private var proxyUsername = ""
+    @State private var proxyPassword = ""
+    @State private var tagColor: TagColor = .none
+    @State private var isProduction = false
+    @State private var startupCommands = ""
+    @State private var switchUser = ""
+    @State private var switchUserPassword = ""
+    @State private var aiInstructions = ""
+    @State private var note = ""
+    @State private var macAddress = ""
+    @State private var validationMessage: String?
+    @State private var quickFill = ""
+    /// issue #41:本地 Shell 书签(起始目录 + 名字),与 SSH 主机共用整理/启动命令/AI 引导
+    @State private var isLocalShell = false
+    @State private var localDirectory = ""
+
+    private var isEditing: Bool { host != nil }
+    private var isDuplicating: Bool { secretsSourceHostID != nil }
+
+    private var passwordPrompt: LocalizedStringKey {
+        if isDuplicating { return "留空沿用原主机的密码" }
+        return isEditing ? "留空保持不变" : "密码"
+    }
+
+    private var passphrasePrompt: LocalizedStringKey {
+        if isDuplicating { return "留空沿用原主机的 passphrase" }
+        return isEditing ? "留空保持不变" : "没有则不填"
+    }
+
+    private var switchUserPasswordPrompt: LocalizedStringKey {
+        if isDuplicating { return "留空沿用原主机的;没存过就连接后手动输入" }
+        return isEditing ? "留空保持不变;没存过就连接后手动输入" : "留空则连接后手动输入"
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Form {
+                if !isEditing {
+                    Picker("类型", selection: $isLocalShell) {
+                        Text("SSH 主机").tag(false)
+                        Text("本地 Shell").tag(true)
+                    }
+                    .pickerStyle(.segmented)
+                }
+                if isLocalShell {
+                    Section("本地 Shell") {
+                        TextField("显示名", text: $label, prompt: Text(localDirectoryPlaceholderName).foregroundStyle(.quaternary))
+                        HStack {
+                            TextField("起始目录", text: $localDirectory, prompt: Text("~(家目录)").foregroundStyle(.quaternary))
+                                .autocorrectionDisabled()
+                            Button("选择…") { pickLocalDirectory() }
+                        }
+                        Text("在本机这个目录下打开 shell(设置里的 Shell 路径)。标签页显示这里的名字。")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+                if !isEditing && !isLocalShell {
+                    Section {
+                        TextField(
+                            "快速新建",
+                            text: $quickFill,
+                            prompt: Text("粘贴 user@host:port 或 ssh 命令,自动填充下方字段").foregroundStyle(.quaternary)
+                        )
+                        .onChange(of: quickFill) { _, newValue in
+                            applyQuickFill(newValue)
+                        }
+                    }
+                }
+                if !isLocalShell {
+                Section("连接") {
+                    TextField("显示名", text: $label, prompt: Text(hostname.isEmpty ? String(localized: "例如:生产环境 API") : hostname).foregroundStyle(.quaternary))
+                    TextField("主机地址", text: $hostname, prompt: Text("example.com 或 IP").foregroundStyle(.quaternary))
+                    TextField("端口", text: $port)
+                    TextField("用户名", text: $username)
+                }
+
+                Section("认证") {
+                    Picker("认证方式", selection: $authMethod) {
+                        Text("密码").tag(AuthMethodKind.password)
+                        Text("私钥文件").tag(AuthMethodKind.privateKeyFile)
+                        Text("密钥库").tag(AuthMethodKind.storedKey)
+                        Text("Agent").tag(AuthMethodKind.agent)
+                    }
+                    .pickerStyle(.segmented)
+
+                    switch authMethod {
+                    case .password:
+                        SecureField(
+                            "密码",
+                            text: $password,
+                            prompt: Text(passwordPrompt).foregroundStyle(.quaternary)
+                        )
+                    case .privateKeyFile:
+                        HStack {
+                            TextField("私钥路径", text: $privateKeyPath, prompt: Text("~/.ssh/id_ed25519").foregroundStyle(.quaternary))
+                            Button("选择…") { pickPrivateKey() }
+                        }
+                        SecureField(
+                            "Passphrase",
+                            text: $passphrase,
+                            prompt: Text(passphrasePrompt).foregroundStyle(.quaternary)
+                        )
+                    case .storedKey:
+                        if storedKeys.isEmpty {
+                            Text("密钥库是空的,先到侧栏「密钥」页生成或导入。")
+                                .font(.callout)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Picker("密钥", selection: $selectedKeyID) {
+                                Text("未选择").tag(UUID?.none)
+                                ForEach(storedKeys) { key in
+                                    Text("\(key.name)(\(key.keyType))").tag(UUID?.some(key.id))
+                                }
+                            }
+                        }
+                    case .agent:
+                        Text("使用系统 ssh-agent 里已加载的密钥(ed25519 / RSA)。用 ssh-add 加载密钥后即可。")
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                Section("高级") {
+                    Picker("跳板机", selection: $jumpHostID) {
+                        Text("不使用").tag(UUID?.none)
+                        ForEach(availableJumpHosts) { candidate in
+                            Text(candidate.label).tag(UUID?.some(candidate.id))
+                        }
+                    }
+                    if jumpHostID != nil {
+                        Text("连接时先经跳板机(等效 ProxyJump),支持链式。")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Picker("代理", selection: $proxyKind) {
+                        ForEach(ProxyKind.allCases) { kind in
+                            Text(kind.label).tag(kind)
+                        }
+                    }
+                    if proxyKind != .none {
+                        TextField("代理主机", text: $proxyHost)
+                        TextField("代理端口", text: $proxyPort)
+                        TextField("用户名(可选)", text: $proxyUsername)
+                        SecureField("密码(可选,留空保持不变)", text: $proxyPassword)
+                    }
+                }
+
+                if isEditing {
+                    Section("端口转发") {
+                        ForEach(forwards) { forward in
+                            forwardRow(forward)
+                        }
+                        Button {
+                            addForward()
+                        } label: {
+                            Label("添加转发", systemImage: "plus")
+                        }
+                        Text("连接时自动建立;可在会话信息面板单独查看状态。")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                } else {
+                    Section("端口转发") {
+                        Text("保存主机后可添加端口转发。")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                }
+
+                Section("整理") {
+                    Picker("标签色", selection: $tagColor) {
+                        ForEach(TagColor.allCases) { color in
+                            Text(colorName(color)).tag(color)
+                        }
+                    }
+                    Toggle(isOn: $isProduction) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("生产环境")
+                            Text("标题胶囊变红警戒,粘贴/危险命令强制确认")
+                                .font(.caption).foregroundStyle(.secondary)
+                        }
+                    }
+                    if !isLocalShell {
+                        TextField("MAC 地址(Wake-on-LAN)", text: $macAddress, prompt: Text("AA:BB:CC:11:22:33").foregroundStyle(.quaternary))
+                            .autocorrectionDisabled()
+                    }
+                    TextField("备注", text: $note, axis: .vertical)
+                        .lineLimit(2...4)
+                }
+
+                if !isLocalShell {
+                Section("连接后切换用户") {
+                    TextField("su 到用户", text: $switchUser, prompt: Text("留空不切换,例如 appuser").foregroundStyle(.quaternary))
+                        .autocorrectionDisabled()
+                    if !switchUser.trimmingCharacters(in: .whitespaces).isEmpty {
+                        SecureField(
+                            "su 密码",
+                            text: $switchUserPassword,
+                            prompt: Text(switchUserPasswordPrompt).foregroundStyle(.quaternary)
+                        )
+                    }
+                    Text("适合禁止直接登录、只能 su 过去的账号:连上后自动执行 su - 用户,等到密码提示再从钥匙串填入,不会盲发;分屏新开的 shell 也会切换。密码只进钥匙串。")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+                }
+
+                Section(isLocalShell ? String(localized: "打开后自动执行") : String(localized: "连接后自动执行")) {
+                    TextField(
+                        "启动命令",
+                        text: $startupCommands,
+                        prompt: Text("每行一条,例如:\ncd /app\ntmux attach || tmux").foregroundStyle(.quaternary),
+                        axis: .vertical
+                    )
+                    .lineLimit(2...6)
+                    .font(.system(size: 12, design: .monospaced))
+                    Text(isLocalShell
+                         ? String(localized: "shell 启动后按顺序自动发送(各自动补回车)。分屏复制的会话不重复执行。")
+                         : String(localized: "连接建立后按顺序自动发送(各自动补回车)。分屏复制的会话不重复执行。"))
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+
+                Section("AI 引导") {
+                    TextField(
+                        "主机引导",
+                        text: $aiInstructions,
+                        prompt: Text("这台机器的部署结构、服务名、注意事项,例如:\n应用跑在 docker compose,目录 /srv/app\n日志用 journalctl -u app 看;/data 不要动").foregroundStyle(.quaternary),
+                        axis: .vertical
+                    )
+                    .lineLimit(3...8)
+                    Text("注入 AI 助手的系统提示词,只对这台主机生效;设置的「AI 助手」里可另写全局引导。")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+
+                if let message = validationMessage {
+                    Text(message)
+                        .font(.callout)
+                        .foregroundStyle(.red)
+                }
+            }
+            .formStyle(.grouped)
+
+            Divider()
+            HStack {
+                Button("取消") { dismiss() }
+                    .keyboardShortcut(.cancelAction)
+                Spacer()
+                Button(isEditing && !isDuplicating ? "保存" : "创建") { save() }
+                Button(isLocalShell ? String(localized: "保存并打开") : String(localized: "保存并连接")) { save(andConnect: true) }
+                    .keyboardShortcut(.defaultAction)
+                    .buttonStyle(.borderedProminent)
+            }
+            .padding(12)
+        }
+        .frame(width: 460, height: 560)
+        .onAppear(perform: populate)
+    }
+
+    private func applyQuickFill(_ input: String) {
+        guard let parsed = SSHCommandParser.parse(input) else { return }
+        hostname = parsed.hostname
+        if let user = parsed.username { username = user }
+        if let parsedPort = parsed.port { port = String(parsedPort) }
+        if let identityFile = parsed.identityFile {
+            authMethod = .privateKeyFile
+            privateKeyPath = identityFile
+        }
+    }
+
+    private func populate() {
+        guard let host else {
+            groupID = defaultGroupID
+            isLocalShell = startsAsLocalShell
+            return
+        }
+        isLocalShell = host.isLocalShell
+        localDirectory = host.localDirectory
+        label = host.label
+        hostname = host.hostname
+        port = String(host.port)
+        username = host.username
+        authMethod = host.authMethod
+        privateKeyPath = host.privateKeyPath ?? ""
+        selectedKeyID = host.keyID
+        // 未入库的副本不挂 group 关系(挂了会被 SwiftData 顺手插进 context),分组走 defaultGroupID
+        groupID = host.group?.id ?? defaultGroupID
+        jumpHostID = host.jumpHostID
+        proxyKind = host.proxy.kind
+        proxyHost = host.proxy.host
+        proxyPort = String(host.proxy.port)
+        proxyUsername = host.proxy.username
+        tagColor = host.tagColor
+        isProduction = host.isProduction
+        startupCommands = host.startupCommands
+        switchUser = host.switchUser
+        aiInstructions = host.aiInstructions
+        note = host.note
+        macAddress = host.macAddress
+    }
+
+    private var forwards: [PortForward] {
+        (host?.portForwards ?? []).sorted { $0.sortOrder < $1.sortOrder }
+    }
+
+    private func addForward() {
+        guard let host else { return }
+        let forward = PortForward(
+            kind: .local,
+            bindHost: "127.0.0.1",
+            bindPort: 8080,
+            targetHost: "127.0.0.1",
+            targetPort: 80,
+            sortOrder: (forwards.last?.sortOrder ?? 0) + 1
+        )
+        forward.host = host
+        modelContext.insert(forward)
+    }
+
+    @ViewBuilder
+    private func forwardRow(_ forward: PortForward) -> some View {
+        ForwardRowView(forward: forward) {
+            modelContext.delete(forward)
+        }
+    }
+
+    /// 可选跳板机:排除自己,避免形成环(不允许选择会指回自己的主机)
+    private var availableJumpHosts: [Host] {
+        allHosts.filter { candidate in
+            guard candidate.id != host?.id, !candidate.isLocalShell else { return false }
+            return !reachesSelf(from: candidate)
+        }
+    }
+
+    private func reachesSelf(from candidate: Host) -> Bool {
+        guard let selfID = host?.id else { return false }
+        var seen: Set<UUID> = []
+        var current: UUID? = candidate.jumpHostID
+        while let id = current, !seen.contains(id) {
+            if id == selfID { return true }
+            seen.insert(id)
+            current = allHosts.first { $0.id == id }?.jumpHostID
+        }
+        return false
+    }
+
+    private func save(andConnect: Bool = false) {
+        if isLocalShell {
+            saveLocalShell(andConnect: andConnect)
+            return
+        }
+        let trimmedHostname = hostname.trimmingCharacters(in: .whitespaces)
+        let trimmedUsername = username.trimmingCharacters(in: .whitespaces)
+        guard !trimmedHostname.isEmpty, !trimmedUsername.isEmpty else {
+            validationMessage = String(localized: "主机地址和用户名不能为空。")
+            return
+        }
+        guard let portNumber = Int(port), (1...65535).contains(portNumber) else {
+            validationMessage = String(localized: "端口需要是 1-65535 之间的数字。")
+            return
+        }
+        if authMethod == .privateKeyFile && privateKeyPath.trimmingCharacters(in: .whitespaces).isEmpty {
+            validationMessage = String(localized: "请选择私钥文件。")
+            return
+        }
+        if authMethod == .storedKey && selectedKeyID == nil {
+            validationMessage = String(localized: "请选择密钥库中的密钥。")
+            return
+        }
+
+        // 新建/转为托管(尚未入库)时查重:同地址+端口+用户名的主机已存在则提示,不重复添加
+        if host?.modelContext == nil {
+            if let duplicate = allHosts.first(where: {
+                $0.id != host?.id
+                    && !$0.isLocalShell
+                    && $0.hostname == trimmedHostname
+                    && $0.port == portNumber
+                    && $0.username == trimmedUsername
+            }) {
+                validationMessage = String(localized: "该主机已存在:「\(duplicate.label)」(\(duplicate.username)@\(duplicate.hostname):\(String(duplicate.port))),不能重复添加。")
+                return
+            }
+        }
+
+        let displayLabel = label.trimmingCharacters(in: .whitespaces)
+        let group = groupID.flatMap { id in groups.first { $0.id == id } }
+
+        let target: Host
+        if let host {
+            target = host
+            // 转为托管主机的副本延迟到保存时才入库,取消编辑不留脏数据
+            if host.modelContext == nil {
+                modelContext.insert(host)
+            }
+        } else {
+            target = Host(label: "", hostname: "", username: "")
+            modelContext.insert(target)
+        }
+
+        target.label = displayLabel.isEmpty ? trimmedHostname : displayLabel
+        target.hostname = trimmedHostname
+        target.port = portNumber
+        target.username = trimmedUsername
+        target.authMethod = authMethod
+        target.privateKeyPath = authMethod == .privateKeyFile
+            ? privateKeyPath.trimmingCharacters(in: .whitespaces)
+            : nil
+        target.keyID = authMethod == .storedKey ? selectedKeyID : nil
+        target.group = group
+        target.jumpHostID = jumpHostID
+        target.proxy = ProxyConfig(
+            kind: proxyKind,
+            host: proxyHost.trimmingCharacters(in: .whitespaces),
+            port: Int(proxyPort) ?? 1080,
+            username: proxyUsername.trimmingCharacters(in: .whitespaces),
+            requiresAuth: !proxyUsername.trimmingCharacters(in: .whitespaces).isEmpty
+        )
+        if proxyKind != .none, !proxyPassword.isEmpty {
+            try? KeychainStore.save(proxyPassword, account: KeychainStore.proxyPasswordAccount(for: target.id))
+        }
+        target.tagColor = tagColor
+        target.isProduction = isProduction
+        target.startupCommands = startupCommands
+        target.switchUser = switchUser.trimmingCharacters(in: .whitespaces)
+        target.aiInstructions = aiInstructions
+        target.note = note
+        target.macAddress = macAddress.trimmingCharacters(in: .whitespaces)
+
+        // 创建副本:先把源主机的凭据整套复制到新 id 下,下面用户填了的覆盖、用不上的删掉,留空即沿用
+        if let sourceID = secretsSourceHostID {
+            KeychainStore.copySecrets(from: sourceID, to: target.id)
+        }
+        do {
+            if target.switchUser.isEmpty {
+                try? KeychainStore.delete(account: KeychainStore.switchUserPasswordAccount(for: target.id))
+            } else if !switchUserPassword.isEmpty {
+                try KeychainStore.save(switchUserPassword, account: KeychainStore.switchUserPasswordAccount(for: target.id))
+            }
+            if authMethod == .password {
+                if !password.isEmpty {
+                    try KeychainStore.save(password, account: KeychainStore.passwordAccount(for: target.id))
+                }
+                try? KeychainStore.delete(account: KeychainStore.passphraseAccount(for: target.id))
+            } else {
+                if !passphrase.isEmpty {
+                    try KeychainStore.save(passphrase, account: KeychainStore.passphraseAccount(for: target.id))
+                }
+                try? KeychainStore.delete(account: KeychainStore.passwordAccount(for: target.id))
+            }
+        } catch {
+            validationMessage = error.localizedDescription
+            return
+        }
+
+        // SwiftData 的自动保存不保证在用户紧接着打开「导出备份」前完成。
+        // 显式提交让新建/编辑的主机、分组和转发立刻对设置窗口的 context 可见。
+        do {
+            try modelContext.save()
+        } catch {
+            validationMessage = String(localized: "保存主机失败:\(error.localizedDescription)")
+            return
+        }
+
+        dismiss()
+        if andConnect {
+            if let onConnect {
+                onConnect(target)
+            } else {
+                target.lastConnectedAt = Date()
+                _ = SessionManager.shared.open(spec: HostSpec.resolve(target, in: allHosts))
+            }
+        } else if let onSave {
+            onSave(target)
+        }
+    }
+
+    /// 显示名留空时的回退:起始目录最后一级(空 = 本地 Shell)
+    private var localDirectoryPlaceholderName: String {
+        let dir = localDirectory.trimmingCharacters(in: .whitespacesAndNewlines)
+        return dir.isEmpty ? String(localized: "本地 Shell") : LocalPath.shortName(dir)
+    }
+
+    private func saveLocalShell(andConnect: Bool) {
+        let dir = localDirectory.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !dir.isEmpty {
+            var isDir: ObjCBool = false
+            guard FileManager.default.fileExists(atPath: LocalPath.expand(dir), isDirectory: &isDir), isDir.boolValue else {
+                validationMessage = String(localized: "起始目录不存在或不是文件夹。")
+                return
+            }
+        }
+        let target: Host
+        if let host {
+            target = host
+            if host.modelContext == nil { modelContext.insert(host) }
+        } else {
+            target = Host(label: "", hostname: "", username: "")
+            modelContext.insert(target)
+        }
+        let displayLabel = label.trimmingCharacters(in: .whitespaces)
+        target.isLocalShell = true
+        // 存 ~ 缩写:同步到另一台 Mac(用户名不同)仍指向对应的家目录
+        target.localDirectory = dir.isEmpty ? "" : LocalPath.abbreviate(dir)
+        target.label = displayLabel.isEmpty ? localDirectoryPlaceholderName : displayLabel
+        target.hostname = "localhost"
+        target.port = 0
+        target.username = NSUserName()
+        target.group = groupID.flatMap { id in groups.first { $0.id == id } }
+        target.tagColor = tagColor
+        target.isProduction = isProduction
+        target.startupCommands = startupCommands
+        target.aiInstructions = aiInstructions
+        target.note = note
+        do {
+            try modelContext.save()
+        } catch {
+            validationMessage = String(localized: "保存主机失败:\(error.localizedDescription)")
+            return
+        }
+        dismiss()
+        if andConnect {
+            if let onConnect {
+                onConnect(target)
+            } else {
+                target.lastConnectedAt = Date()
+                _ = SessionManager.shared.open(spec: HostSpec(host: target))
+            }
+        } else if let onSave {
+            onSave(target)
+        }
+    }
+
+    private func pickLocalDirectory() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.canCreateDirectories = true
+        panel.allowsMultipleSelection = false
+        let current = localDirectory.trimmingCharacters(in: .whitespacesAndNewlines)
+        panel.directoryURL = URL(fileURLWithPath: current.isEmpty ? NSHomeDirectory() : LocalPath.expand(current))
+        if panel.runModal() == .OK, let url = panel.url {
+            localDirectory = LocalPath.abbreviate(url.path)
+        }
+    }
+
+    private func pickPrivateKey() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".ssh")
+        panel.showsHiddenFiles = true
+        if panel.runModal() == .OK, let url = panel.url {
+            privateKeyPath = url.path
+        }
+    }
+
+    private func colorName(_ color: TagColor) -> String {
+        switch color {
+        case .none: return String(localized: "无")
+        case .red: return String(localized: "红(生产)")
+        case .orange: return String(localized: "橙")
+        case .green: return String(localized: "绿")
+        case .blue: return String(localized: "蓝")
+        case .purple: return String(localized: "紫")
+        }
+    }
+}
+
+/// 单条端口转发的编辑行
+private struct ForwardRowView: View {
+    @Bindable var forward: PortForward
+    let onDelete: () -> Void
+
+    var body: some View {
+        VStack(spacing: 6) {
+            HStack {
+                Picker("", selection: $forward.kindRaw) {
+                    ForEach(PortForwardKind.allCases) { kind in
+                        Text(kind.label).tag(kind.rawValue)
+                    }
+                }
+                .labelsHidden()
+                .frame(width: 150)
+                Spacer()
+                Toggle("启用", isOn: $forward.enabled)
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+                    .controlSize(.mini)
+                Button(role: .destructive, action: onDelete) {
+                    Image(systemName: "trash")
+                }
+                .buttonStyle(.borderless)
+            }
+            HStack(spacing: 6) {
+                portField(forward.kind == .remote ? String(localized: "远端端口") : String(localized: "本地端口"), value: $forward.bindPort)
+                if forward.kind != .dynamic {
+                    Image(systemName: "arrow.right").font(.caption2).foregroundStyle(.tertiary)
+                    TextField("目标主机", text: $forward.targetHost)
+                        .textFieldStyle(.roundedBorder)
+                    portField(String(localized: "端口"), value: $forward.targetPort)
+                }
+            }
+        }
+        .padding(.vertical, 2)
+    }
+
+    private func portField(_ prompt: String, value: Binding<Int>) -> some View {
+        TextField(prompt, value: value, format: .number.grouping(.never))
+            .textFieldStyle(.roundedBorder)
+            .frame(width: 78)
+    }
+}

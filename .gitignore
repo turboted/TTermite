@@ -1,0 +1,20 @@
+.DS_Store
+/.build/
+/.swiftpm/
+/TTermite.xcodeproj
+/Berth.xcodeproj
+/DerivedData
+/build
+xcuserdata/
+*.xcresult
+docker/test-sshd/test_ed25519*
+
+# vendored packages: never commit SPM build artifacts
+vendor/**/.build/
+vendor/**/.swiftpm/
+vendor/**/Package.resolved
+
+/Berth/Resources/AppHistory.json
+/Berth/Resources/ComponentCatalog.json
+/docs/verification/
+__pycache__/

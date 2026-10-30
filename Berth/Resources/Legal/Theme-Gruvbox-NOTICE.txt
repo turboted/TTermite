@@ -1,0 +1,5 @@
+Gruvbox
+Author: Pavel Pertsev (morhetz) <morhetz@gmail.com>
+Source: https://github.com/morhetz/gruvbox
+License: MIT, explicitly declared in the accompanying upstream package.json.
+Adaptation: palette represented as Swift TerminalTheme values; no Vim plugin code is bundled.

@@ -1,0 +1,78 @@
+name: TTermite
+options:
+  bundleIdPrefix: app.ttermite
+  deploymentTarget:
+    macOS: "15.0"
+  createIntermediateGroups: true
+  developmentLanguage: zh-Hans
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    SWIFT_EMIT_LOC_STRINGS: true
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+packages:
+  Citadel:
+    path: vendor/Citadel
+  SwiftTerm:
+    url: https://github.com/migueldeicaza/SwiftTerm.git
+    exactVersion: 1.14.0
+  SwiftNIO:
+    url: https://github.com/apple/swift-nio.git
+    exactVersion: 2.81.0
+  SwiftCollections:
+    url: https://github.com/apple/swift-collections.git
+    exactVersion: 1.1.4
+targets:
+  TTermite:
+    type: application
+    platform: macOS
+    sources:
+      - path: Berth
+        excludes:
+          - Core/Terminal/include
+    dependencies:
+      - package: Citadel
+      - package: SwiftTerm
+      - sdk: libsqlite3.tbd
+    scheme:
+      testTargets:
+        - TTermiteTests
+    info:
+      path: Berth/Info.plist
+      properties:
+        CFBundleDisplayName: TTermite
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        NSHighResolutionCapable: true
+        LSFileQuarantineEnabled: true
+        NSLocalNetworkUsageDescription: TTermite 需要存取區域網路以連線至 SSH 主機。
+        ATSApplicationFontsPath: Fonts
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: Folder
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [public.folder]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.ttermite.app
+        SWIFT_OBJC_BRIDGING_HEADER: Berth/Core/Terminal/BerthPtySpawn.h
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        ENABLE_HARDENED_RUNTIME: false
+        DEAD_CODE_STRIPPING: true
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+  TTermiteTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - BerthTests
+    dependencies:
+      - target: TTermite
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.ttermite.tests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
