@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.8.0",
+      "date": "2026-10-30",
+      "baseRevision": "db786bd9acf8a79e81409d88908341585db2ad93",
+      "endRevision": null,
+      "change": {
+        "id": "local-directory-enumeration",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "本機目錄列舉服務",
+        "zh-Hans": "本地目录列举服务",
+        "en": "Local directory enumeration service"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入目錄優先排序、自然檔名排序與隱藏檔選項的目錄列舉服務；檔案樹介面於後續接入，目前失敗會回傳空清單，尚未區分錯誤與空目錄。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入目录优先排序、自然文件名排序与隐藏文件选项的目录列举服务；文件树界面于后续接入，目前失败会返回空列表，尚未区分错误与空目录。"
+        ],
+        "en": [
+          "[Added] Add directory-first and natural filename ordering with a hidden-file option; the file tree UI comes later, and failures currently return an empty list without distinguishing errors from empty folders."
+        ]
+      }
+    },
+    {
       "version": "1.7.0",
       "date": "2026-10-30",
       "baseRevision": "1aa5324caf908cc6d15d391bfdc639cf05a399e4",
-      "endRevision": null,
+      "endRevision": "db786bd9acf8a79e81409d88908341585db2ad93",
       "change": {
         "id": "cli-launcher-installer",
         "category": "added"
