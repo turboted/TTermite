@@ -3,12 +3,24 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.38.0",
+      "changeID": "syntax-highlighting-service",
+      "originalRevision": "48e5fa1b2bbbee335f50e6c01ef7b462a9afe90e",
+      "previousReconstructionRevision": "f6127322df0f880d31420d6bdfde31a2fddb84df",
+      "previousReconstructionVersion": "0.1.10",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/Features/FileBrowser/CodeHighlighter.swift"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.37.0",
       "changeID": "git-inspector-panel",
       "originalRevision": "6f1802a4748410002d221e49cf493998dd3458b2",
       "previousReconstructionRevision": "a1f47c4041840f87334ab7780c797e0dc047e9cd",
       "previousReconstructionVersion": "0.1.9",
-      "rebuildRevision": null,
+      "rebuildRevision": "b06cd82f08c0eeca4b77593ef87df8006c6998e8",
       "paths": [],
       "status": "awaitingIndependentValidation"
     },

@@ -1,4 +1,4 @@
-# TTermite v1.37.0
+# TTermite v1.38.0
 
 TTermite v1.0.0 baseline feature overview
 

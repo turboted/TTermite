@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.38.0",
+      "date": "2026-10-30",
+      "baseRevision": "b06cd82f08c0eeca4b77593ef87df8006c6998e8",
+      "endRevision": null,
+      "change": {
+        "id": "syntax-highlighting-service",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "程式碼預覽語法著色",
+        "zh-Hans": "代码预览语法着色",
+        "en": "Preview syntax highlighting"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 新增依副檔名與終端主題著色的輕量服務，辨識註解、字串、數字及關鍵字；本版提供著色層，預覽面板稍後接入，非完整語法樹解析且不支援的格式回退為純文字。"
+        ],
+        "zh-Hans": [
+          "[新增] 新增按扩展名及终端主题着色的轻量服务，识别注释、字符串、数字及关键字；本版提供着色层，预览面板稍后接入，并非完整语法树解析，不支持的格式回退为纯文本。"
+        ],
+        "en": [
+          "[Added] Add extension- and theme-based highlighting for comments, strings, numbers and keywords; this is the highlighting layer before its preview panel, not a full syntax parser, and unsupported formats fall back to plain text."
+        ]
+      }
+    },
+    {
       "version": "1.37.0",
       "date": "2026-10-30",
       "baseRevision": "001c08971b999cecc571825ba2491c7a0e575626",
-      "endRevision": null,
+      "endRevision": "b06cd82f08c0eeca4b77593ef87df8006c6998e8",
       "change": {
         "id": "git-inspector-panel",
         "category": "added"
