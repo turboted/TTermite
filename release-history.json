@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.37.0",
+      "date": "2026-10-30",
+      "baseRevision": "001c08971b999cecc571825ba2491c7a0e575626",
+      "endRevision": null,
+      "change": {
+        "id": "git-inspector-panel",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Git 狀態與差異面板",
+        "zh-Hans": "Git 状态与差异面板",
+        "en": "Git status and diff inspector"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 組合 Git 狀態、暫存、取消暫存、捨棄變更及提交歷史面板，連結檔案歷史、歸屬和身分設定；本版完成面板本身，主視窗入口稍後接入，捨棄操作可能移除未提交內容。"
+        ],
+        "zh-Hans": [
+          "[新增] 组合 Git 状态、暂存、取消暂存、丢弃改动及提交历史面板，连接文件历史、归属和身份设置；本版完成面板本身，主窗口入口稍后接入，丢弃操作可能移除未提交内容。"
+        ],
+        "en": [
+          "[Added] Compose the Git status, stage/unstage, discard and commit-history inspector with file history, blame and identity actions; this completes the panel before its main-window entry, and discard can remove uncommitted content."
+        ]
+      }
+    },
+    {
       "version": "1.36.0",
       "date": "2026-10-30",
       "baseRevision": "5ca586219440cb8234c33ef11b52f26b0ce25061",
-      "endRevision": null,
+      "endRevision": "001c08971b999cecc571825ba2491c7a0e575626",
       "change": {
         "id": "git-identity-view",
         "category": "added"
