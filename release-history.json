@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.26.0",
+      "date": "2026-10-30",
+      "baseRevision": "4bb20b25cc967b61e300f8134c3d4546adfdd966",
+      "endRevision": null,
+      "change": {
+        "id": "directory-jumper-view",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "目錄跳轉器視圖",
+        "zh-Hans": "目录跳转器视图",
+        "en": "Directory jumper view"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入依主機篩選及模糊搜尋造訪目錄的跳轉器，可將 cd 命令送到目前 Shell，或在本機目錄開新分頁；本版先建立視圖與控制器，主視窗入口稍後接上，需有目錄歷史。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入按主机过滤及模糊搜索访问目录的跳转器，可向当前 Shell 发送 cd 命令，或在本地目录打开新标签页；本版先建立视图与控制器，主窗口入口稍后接入，需要目录历史。"
+        ],
+        "en": [
+          "[Added] Add a host-filtered fuzzy directory jumper that can send cd to the active shell or open a local-directory tab; this introduces the view/controller before its main-window entry and requires recorded directories."
+        ]
+      }
+    },
+    {
       "version": "1.25.0",
       "date": "2026-10-30",
       "baseRevision": "619ebdcc51a3b62500f2a8e13c4c9a3acd1b8d5f",
-      "endRevision": null,
+      "endRevision": "4bb20b25cc967b61e300f8134c3d4546adfdd966",
       "change": {
         "id": "command-timeline-view",
         "category": "added"

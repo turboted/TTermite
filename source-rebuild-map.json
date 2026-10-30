@@ -3,12 +3,24 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.26.0",
+      "changeID": "directory-jumper-view",
+      "originalRevision": "751cad1ea6aaa368ffdd56a78c72dec596950dd9",
+      "previousReconstructionRevision": "feec160bb2565560839a4e0d920d118682538039",
+      "previousReconstructionVersion": "0.1.7",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/Features/DirectoryJumper/DirectoryJumperView.swift"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.25.0",
       "changeID": "command-timeline-view",
       "originalRevision": "751cad1ea6aaa368ffdd56a78c72dec596950dd9",
       "previousReconstructionRevision": "feec160bb2565560839a4e0d920d118682538039",
       "previousReconstructionVersion": "0.1.7",
-      "rebuildRevision": null,
+      "rebuildRevision": "4bb20b25cc967b61e300f8134c3d4546adfdd966",
       "paths": [
         "Berth/Features/Terminal/CommandTimelineView.swift"
       ],

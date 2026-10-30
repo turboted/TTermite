@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 @Observable
 final class SessionManager {
     static let shared = SessionManager()
+    let directoryJumper = CommandPaletteController()
 
     @ObservationIgnored private var wakeObserver: NSObjectProtocol?
 
@@ -542,6 +543,9 @@ final class SessionManager {
         spec.isLocal = true; spec.serialDevice = device; spec.serialBaud = baud; spec.serialLocalEcho = localEcho
         open(spec: spec)
     }
+
+    func newTab(in directory: String? = nil) { open(spec: .localShell(directory: directory ?? "")) }
+    func newTab(directory: String) { newTab(in: directory) }
 
     // MARK: - 会话恢复
 
