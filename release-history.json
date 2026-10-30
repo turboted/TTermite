@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.10.0",
+      "date": "2026-10-30",
+      "baseRevision": "f55a0a96af929d6bd92d84d0eac46ae691aeadb0",
+      "endRevision": null,
+      "change": {
+        "id": "listening-port-discovery",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "本機監聽連接埠服務",
+        "zh-Hans": "本地监听端口服务",
+        "en": "Local listening-port discovery"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 透過 lsof 查詢本機 TCP 監聽連接埠並解析程序、位址與埠號，供後續列表使用；僅能看到目前使用者有權查詢的程序，本版尚未接上列表介面。"
+        ],
+        "zh-Hans": [
+          "[新增] 通过 lsof 查询本地 TCP 监听端口并解析进程、地址与端口，供后续列表使用；仅能看到当前用户有权查询的进程，本版尚未接入列表界面。"
+        ],
+        "en": [
+          "[Added] Use lsof to discover local TCP listeners with process, address and port information for a later list view; visibility is limited by current-user permissions and the list UI is not connected yet."
+        ]
+      }
+    },
+    {
       "version": "1.9.0",
       "date": "2026-10-30",
       "baseRevision": "3ca5d791974cd564e1b22b6d4a3d67d513b6ea11",
-      "endRevision": null,
+      "endRevision": "f55a0a96af929d6bd92d84d0eac46ae691aeadb0",
       "change": {
         "id": "terminal-file-link-services",
         "category": "added"

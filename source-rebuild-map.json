@@ -3,12 +3,24 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.10.0",
+      "changeID": "listening-port-discovery",
+      "originalRevision": "e6f68cf7cd30b7e839dbb3c01e8e8707edd4fe72",
+      "previousReconstructionRevision": "100be915e34a25df4d5cfb5cf11fe34a32f7e1db",
+      "previousReconstructionVersion": "0.1.4",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/Core/Services/PortMonitor.swift"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.9.0",
       "changeID": "terminal-file-link-services",
       "originalRevision": "e6f68cf7cd30b7e839dbb3c01e8e8707edd4fe72",
       "previousReconstructionRevision": "100be915e34a25df4d5cfb5cf11fe34a32f7e1db",
       "previousReconstructionVersion": "0.1.4",
-      "rebuildRevision": null,
+      "rebuildRevision": "f55a0a96af929d6bd92d84d0eac46ae691aeadb0",
       "paths": [
         "Berth/Core/Terminal/EditorLauncher.swift",
         "Berth/Core/Terminal/FileLinkDetector.swift",
