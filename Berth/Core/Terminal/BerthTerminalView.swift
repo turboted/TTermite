@@ -84,6 +84,7 @@ final class BerthTerminalView: SwiftTerm.TerminalView {
                 }
             }
         }
+        if event.modifierFlags.contains(.command), handleFileLinkClick(event) { return }
         if event.modifierFlags.contains(.option), event.clickCount == 1,
            inputEnabled, session != nil, moveCursorToClick(event) { return }
         super.mouseDown(with: event)
@@ -191,6 +192,41 @@ final class BerthTerminalView: SwiftTerm.TerminalView {
             ? (terminal.applicationCursor ? "\u{1b}OC" : "\u{1b}[C")
             : (terminal.applicationCursor ? "\u{1b}OD" : "\u{1b}[D")
         session?.sendRawInput(Array(String(repeating: arrow, count: min(abs(delta), 500)).utf8))
+        return true
+    }
+
+    private var pendingFileLink: (path: String, line: Int?, column: Int?)?
+
+    @objc private func ttermiteOpenFileLink() {
+        guard let link = pendingFileLink else { return }
+        EditorLauncher.open(path: link.path, line: link.line, column: link.column)
+    }
+
+    /// 屏幕点 → (终端列, 可视区行)。SwiftTerm 未公开 cellDimension,借 caretFrame 的尺寸(恒等于单元格)
+    private func hitCell(_ event: NSEvent) -> (col: Int, row: Int)? {
+        let cell = caretFrame.size
+        guard cell.width > 0, cell.height > 0 else { return nil }
+        let point = convert(event.locationInWindow, from: nil)
+        let col = Int(point.x / cell.width)
+        let row = Int((frame.height - point.y) / cell.height)
+        guard col >= 0, row >= 0 else { return nil }
+        return (col, row)
+    }
+
+    /// 事件位置命中 file:line 且文件真实存在时返回(绝对路径, 匹配)
+    private func fileLink(at event: NSEvent) -> (path: String, match: FileLinkDetector.Match)? {
+        guard isLocalSession, let (col, row) = hitCell(event),
+              let line = getTerminal().getLine(row: row) else { return nil }
+        let text = line.translateToString(trimRight: true)
+        guard let match = FileLinkDetector.match(in: text, column: col) else { return nil }
+        let cwd = MainActor.assumeIsolated { session?.localWorkingDirectory }
+        return FileLinkDetector.resolve(match, cwd: cwd).map { ($0, match) }
+    }
+
+    @discardableResult
+    private func handleFileLinkClick(_ event: NSEvent) -> Bool {
+        guard let (path, match) = fileLink(at: event) else { return false }
+        EditorLauncher.open(path: path, line: match.line, column: match.column)
         return true
     }
 

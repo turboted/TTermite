@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.21.0",
+      "date": "2026-10-30",
+      "baseRevision": "4960bca6f5db40cb3f579d1e53e7e483ec652557",
+      "endRevision": null,
+      "change": {
+        "id": "command-click-file-links",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Command 點擊開啟本機檔案連結",
+        "zh-Hans": "Command 点击打开本地文件链接",
+        "en": "Command-click local file links"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 將路徑解析服務接到終端的 Command 點擊，命中存在的本機檔案時交給編輯器並附上可用行欄資訊；不會把遠端 Shell 路徑當成本機檔案，編輯器仍須支援相應啟動參數。"
+        ],
+        "zh-Hans": [
+          "[新增] 将路径解析服务接到终端的 Command 点击，命中存在的本地文件时交给编辑器并附上可用行列信息；不会把远程 Shell 路径当成本地文件，编辑器仍须支持相应启动参数。"
+        ],
+        "en": [
+          "[Added] Connect file-link parsing to Command-click so existing local files open in an editor with available line/column information; remote shell paths are excluded and the editor must support the corresponding launch arguments."
+        ]
+      }
+    },
+    {
       "version": "1.20.0",
       "date": "2026-10-30",
       "baseRevision": "928da903810e07b4c4d4afa8b6b6749f18ffc47e",
-      "endRevision": null,
+      "endRevision": "4960bca6f5db40cb3f579d1e53e7e483ec652557",
       "change": {
         "id": "option-click-cursor",
         "category": "added"
