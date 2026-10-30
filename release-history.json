@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.5.0",
+      "date": "2026-10-30",
+      "baseRevision": "df3239cee4ad8bcb4e6e082b9824e15e365de0e3",
+      "endRevision": null,
+      "change": {
+        "id": "git-graph-layout",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Git 提交圖資料與佈局",
+        "zh-Hans": "Git 提交图数据与布局",
+        "en": "Git commit graph layout"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 新增提交與分支線路的解析和佈局，供後續圖形歷史顯示合併關係；此版本只建立資料層，尚未接上歷史圖介面。"
+        ],
+        "zh-Hans": [
+          "[新增] 新增提交与分支线路的解析和布局，供后续图形历史显示合并关系；此版本仅建立数据层，尚未接入历史图界面。"
+        ],
+        "en": [
+          "[Added] Parse commits and lay out branch lanes to support later visual history and merge relationships; this version adds the data layer before the graph UI."
+        ]
+      }
+    },
+    {
       "version": "1.4.0",
       "date": "2026-10-30",
       "baseRevision": "2eac88ae1e4e11f1dea53ca7a77f362cc5b09ef7",
-      "endRevision": null,
+      "endRevision": "df3239cee4ad8bcb4e6e082b9824e15e365de0e3",
       "change": {
         "id": "intraline-diff-emphasis",
         "category": "added"
