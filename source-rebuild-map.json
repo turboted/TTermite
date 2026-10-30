@@ -3,12 +3,24 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.36.0",
+      "changeID": "git-identity-view",
+      "originalRevision": "6f1802a4748410002d221e49cf493998dd3458b2",
+      "previousReconstructionRevision": "a1f47c4041840f87334ab7780c797e0dc047e9cd",
+      "previousReconstructionVersion": "0.1.9",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/Features/Git/GitIdentityView.swift"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.35.0",
       "changeID": "git-graph-view",
       "originalRevision": "6f1802a4748410002d221e49cf493998dd3458b2",
       "previousReconstructionRevision": "a1f47c4041840f87334ab7780c797e0dc047e9cd",
       "previousReconstructionVersion": "0.1.9",
-      "rebuildRevision": null,
+      "rebuildRevision": "5ca586219440cb8234c33ef11b52f26b0ce25061",
       "paths": [
         "Berth/Features/Git/GitHistoryGraphView.swift"
       ],

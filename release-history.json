@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.36.0",
+      "date": "2026-10-30",
+      "baseRevision": "5ca586219440cb8234c33ef11b52f26b0ce25061",
+      "endRevision": null,
+      "change": {
+        "id": "git-identity-view",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Git 提交身分設定視圖",
+        "zh-Hans": "Git 提交身份设置视图",
+        "en": "Git identity settings view"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入 Git user.name／user.email 設定視圖，可選專案或全域範圍；本版先提供視圖，入口稍後接入，全域設定會影響其它儲存庫。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入 Git user.name／user.email 设置视图，可选项目或全局范围；本版先提供视图，入口稍后接入，全局设置会影响其他仓库。"
+        ],
+        "en": [
+          "[Added] Add a Git user.name/user.email editor with repository or global scope; the entry comes later and global settings affect other repositories."
+        ]
+      }
+    },
+    {
       "version": "1.35.0",
       "date": "2026-10-30",
       "baseRevision": "6ccc86932d7e81c8f509fe6529bc3c83b4043ea8",
-      "endRevision": null,
+      "endRevision": "5ca586219440cb8234c33ef11b52f26b0ce25061",
       "change": {
         "id": "git-graph-view",
         "category": "added"
