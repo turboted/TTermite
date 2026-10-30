@@ -4,6 +4,10 @@ import SwiftUI
 
 /// NSStatusItem 必须等 NSApplicationMain 起来再建(App.init 里创建会偶发启动卡死)
 final class BerthAppDelegate: NSObject, NSApplicationDelegate {
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls { SessionManager.shared.openLocalDirectory(url) }
+    }
+
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         SessionManager.shared.persistSessionSnapshot()
         return .terminateNow

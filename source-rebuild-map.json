@@ -3,12 +3,22 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.30.0",
+      "changeID": "open-local-folder-events",
+      "originalRevision": "933331583ea144d84107368201d4dfcfd84d860b",
+      "previousReconstructionRevision": "0ecf5c5422aa7a067ad5376aa5db32217fe3be6b",
+      "previousReconstructionVersion": "0.1.8",
+      "rebuildRevision": null,
+      "paths": [],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.29.0",
       "changeID": "workspace-snapshot-restoration",
       "originalRevision": "933331583ea144d84107368201d4dfcfd84d860b",
       "previousReconstructionRevision": "0ecf5c5422aa7a067ad5376aa5db32217fe3be6b",
       "previousReconstructionVersion": "0.1.8",
-      "rebuildRevision": null,
+      "rebuildRevision": "edbaa498ac492df5e035a44265d245522f924109",
       "paths": [
         "Berth/Core/Services/SessionSnapshot.swift",
         "Berth/Core/Services/SessionSnapshotPersistence.swift",

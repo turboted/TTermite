@@ -555,6 +555,12 @@ final class SessionManager {
         selectedTabID = restored.indices.contains(selectedIndex) ? restored[selectedIndex].id : restored.first?.id
     }
 
+    func openLocalDirectory(_ url: URL) {
+        var isDirectory: ObjCBool = false
+        guard url.isFileURL, FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue else { return }
+        newTab(in: url.path)
+    }
+
     // MARK: - 会话恢复
 
     private static let openTabsKey = "session.openTabs"

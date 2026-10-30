@@ -9,8 +9,8 @@ settings:
   base:
     SWIFT_VERSION: "5.0"
     SWIFT_EMIT_LOC_STRINGS: true
-    MARKETING_VERSION: "1.29.0"
-    CURRENT_PROJECT_VERSION: "32"
+    MARKETING_VERSION: "1.30.0"
+    CURRENT_PROJECT_VERSION: "33"
 packages:
   Citadel:
     path: vendor/Citadel

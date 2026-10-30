@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.30.0",
+      "date": "2026-10-30",
+      "baseRevision": "edbaa498ac492df5e035a44265d245522f924109",
+      "endRevision": null,
+      "change": {
+        "id": "open-local-folder-events",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "以資料夾開啟本機終端分頁",
+        "zh-Hans": "以文件夹打开本地终端标签页",
+        "en": "Open local folders as terminal tabs"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 接收 macOS 開啟資料夾事件，確認本機目錄存在後在該目錄建立 Shell 分頁，讓 Finder 或已安裝啟動器能指定工作目錄；一般檔案和不存在的目錄會略過。"
+        ],
+        "zh-Hans": [
+          "[新增] 接收 macOS 打开文件夹事件，确认本地目录存在后在该目录建立 Shell 标签页，让 Finder 或已安装启动器能指定工作目录；普通文件和不存在的目录会被忽略。"
+        ],
+        "en": [
+          "[Added] Handle macOS folder-open events by opening a shell tab in an existing local directory, allowing Finder or an installed launcher to specify a working directory; ordinary files and missing directories are ignored."
+        ]
+      }
+    },
+    {
       "version": "1.29.0",
       "date": "2026-10-30",
       "baseRevision": "b02a3a538a1d55c598713fd48509b2854fba9e2d",
-      "endRevision": null,
+      "endRevision": "edbaa498ac492df5e035a44265d245522f924109",
       "change": {
         "id": "workspace-snapshot-restoration",
         "category": "added"
