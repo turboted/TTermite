@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-10-30",
+      "baseRevision": "2b49895cb35bf7dfa314e8ac61b7f06d48e7b9c2",
+      "endRevision": null,
+      "change": {
+        "id": "unified-diff-parsing",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "解析 Git 文字差異",
+        "zh-Hans": "解析 Git 文本差异",
+        "en": "Parse Git text diffs"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 新增 unified diff 解析，保留行號、增刪內容及統計，供後續差異介面呈現；目前是解析層，尚無差異面板。"
+        ],
+        "zh-Hans": [
+          "[新增] 新增 unified diff 解析，保留行号、增删内容及统计，供后续差异界面展示；目前是解析层，尚无差异面板。"
+        ],
+        "en": [
+          "[Added] Parse unified diffs with line numbers, additions, removals and statistics for later diff views; this is the parser layer and the diff panel is not connected yet."
+        ]
+      }
+    },
+    {
       "version": "1.2.0",
       "date": "2026-10-30",
       "baseRevision": "8c6c9d62c5f840d7c051cb4e1a5bf55de7f5526f",
-      "endRevision": null,
+      "endRevision": "2b49895cb35bf7dfa314e8ac61b7f06d48e7b9c2",
       "change": {
         "id": "git-repository-service",
         "category": "added"
