@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.23.0",
+      "date": "2026-10-30",
+      "baseRevision": "f2cf919b67ac90e7d512bf747c397ca5249050df",
+      "endRevision": null,
+      "change": {
+        "id": "command-output-diff-view",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "命令輸出比較視圖",
+        "zh-Hans": "命令输出比较视图",
+        "en": "Command output comparison view"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入兩次命令輸出的逐行差異視圖，顯示增刪統計與共同內容；此版先提供視圖，時間線入口稍後接上，已被回捲清除的輸出無法還原比較。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入两次命令输出的逐行差异视图，显示增删统计与共同内容；本版先提供视图，时间线入口稍后接入，已被回滚清除的输出无法恢复比较。"
+        ],
+        "en": [
+          "[Added] Add a view comparing two command outputs with line differences and statistics; the timeline entry is connected later and output already discarded from scrollback cannot be recovered for comparison."
+        ]
+      }
+    },
+    {
       "version": "1.22.0",
       "date": "2026-10-30",
       "baseRevision": "0ec139c8eebc505bac83145ae155870a4d7af42a",
-      "endRevision": null,
+      "endRevision": "f2cf919b67ac90e7d512bf747c397ca5249050df",
       "change": {
         "id": "terminal-regex-search",
         "category": "added"
