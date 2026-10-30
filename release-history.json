@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.34.0",
+      "date": "2026-10-30",
+      "baseRevision": "a8e3af429182bdaf1b2c4d799bcffeb2d908522c",
+      "endRevision": null,
+      "change": {
+        "id": "git-file-history-view",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "單一檔案 Git 歷史視圖",
+        "zh-Hans": "单个文件 Git 历史视图",
+        "en": "Git file history view"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入單一檔案的提交清單與文字／圖片差異視圖，供後續面板開啟檔案沿革；此版先提供視圖，查詢仍受本機歷史與檔案可用性限制。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入单个文件的提交列表与文本／图片差异视图，供后续面板打开文件历史；本版先提供视图，查询仍受本地历史与文件可用性限制。"
+        ],
+        "en": [
+          "[Added] Add per-file commit lists with text or image differences for later file-history entry points; this introduces the view and queries depend on local history and file availability."
+        ]
+      }
+    },
+    {
       "version": "1.33.0",
       "date": "2026-10-30",
       "baseRevision": "8a75e90744d3fdd7a2c717c4feea098bedcf3d7d",
-      "endRevision": null,
+      "endRevision": "a8e3af429182bdaf1b2c4d799bcffeb2d908522c",
       "change": {
         "id": "git-blame-view",
         "category": "added"

@@ -3,12 +3,24 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.34.0",
+      "changeID": "git-file-history-view",
+      "originalRevision": "6f1802a4748410002d221e49cf493998dd3458b2",
+      "previousReconstructionRevision": "a1f47c4041840f87334ab7780c797e0dc047e9cd",
+      "previousReconstructionVersion": "0.1.9",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/Features/Git/FileHistoryView.swift"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.33.0",
       "changeID": "git-blame-view",
       "originalRevision": "6f1802a4748410002d221e49cf493998dd3458b2",
       "previousReconstructionRevision": "a1f47c4041840f87334ab7780c797e0dc047e9cd",
       "previousReconstructionVersion": "0.1.9",
-      "rebuildRevision": null,
+      "rebuildRevision": "a8e3af429182bdaf1b2c4d799bcffeb2d908522c",
       "paths": [
         "Berth/Features/Git/BlameView.swift"
       ],
