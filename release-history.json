@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.6.0",
+      "date": "2026-10-30",
+      "baseRevision": "9f1b79b24dc44518623438e35a3609e072b035d0",
+      "endRevision": null,
+      "change": {
+        "id": "worktree-lifecycle-service",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Git worktree 管理服務",
+        "zh-Hans": "Git worktree 管理服务",
+        "en": "Git worktree lifecycle services"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 新增建立、列舉、開啟與移除 worktree 的服務，讓後續工作區操作能使用不同目錄；本版尚未提供操作入口，force 移除仍可能捨棄工作目錄變更。"
+        ],
+        "zh-Hans": [
+          "[新增] 新增创建、列举、打开与移除 worktree 的服务，让后续工作区操作能使用不同目录；本版尚未提供操作入口，force 移除仍可能丢弃工作目录改动。"
+        ],
+        "en": [
+          "[Added] Add worktree creation, listing, opening and removal services for later workspace actions in separate directories; this version has no UI entry yet, and forced removal can discard checkout changes."
+        ]
+      }
+    },
+    {
       "version": "1.5.0",
       "date": "2026-10-30",
       "baseRevision": "df3239cee4ad8bcb4e6e082b9824e15e365de0e3",
-      "endRevision": null,
+      "endRevision": "9f1b79b24dc44518623438e35a3609e072b035d0",
       "change": {
         "id": "git-graph-layout",
         "category": "added"
