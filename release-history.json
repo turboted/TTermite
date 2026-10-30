@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.40.0",
+      "date": "2026-10-30",
+      "baseRevision": "bad81e0fcf67746b8b402c47f4b36a4ec3fe526b",
+      "endRevision": null,
+      "change": {
+        "id": "local-file-browser-panel",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "本機檔案樹與預覽面板",
+        "zh-Hans": "本地文件树与预览面板",
+        "en": "Local file tree and preview panel"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 新增本機檔案樹與文字、程式碼、Markdown 預覽面板，可顯示隱藏項目並使用外部程式開啟檔案；本版完成面板，主視窗入口稍後接入，文字只預覽前 512 KiB，但此階段仍先讀取整份檔案。"
+        ],
+        "zh-Hans": [
+          "[新增] 新增本地文件树与文本、代码、Markdown 预览面板，可显示隐藏项目并使用外部程序打开文件；本版完成面板，主窗口入口稍后接入，文本仅预览前 512 KiB，但此阶段仍先读取整个文件。"
+        ],
+        "en": [
+          "[Added] Add a local file tree with text, code and Markdown preview plus hidden-item and external-opening actions; the main-window entry comes later, text previews show the first 512 KiB, and this stage still reads the entire file first."
+        ]
+      }
+    },
+    {
       "version": "1.39.0",
       "date": "2026-10-30",
       "baseRevision": "b3f66c7c4fc0b465b2506e8e0317c59bf8cba4f9",
-      "endRevision": null,
+      "endRevision": "bad81e0fcf67746b8b402c47f4b36a4ec3fe526b",
       "change": {
         "id": "markdown-preview-rendering",
         "category": "added"
