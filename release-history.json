@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.39.0",
+      "date": "2026-10-30",
+      "baseRevision": "b3f66c7c4fc0b465b2506e8e0317c59bf8cba4f9",
+      "endRevision": null,
+      "change": {
+        "id": "markdown-preview-rendering",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Markdown 預覽解析與排版",
+        "zh-Hans": "Markdown 预览解析与排版",
+        "en": "Markdown preview rendering"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 新增 Markdown 區塊解析與閱讀排版，處理標題、清單、程式碼區塊及表格等內容；本版提供渲染元件，檔案面板稍後接入，不宣稱涵蓋所有 Markdown 方言，解析時間測試不等於整體畫面延遲。"
+        ],
+        "zh-Hans": [
+          "[新增] 新增 Markdown 区块解析与阅读排版，处理标题、列表、代码块及表格等内容；本版提供渲染组件，文件面板稍后接入，不宣称涵盖所有 Markdown 方言，解析耗时测试不等于整体界面延迟。"
+        ],
+        "en": [
+          "[Added] Add Markdown block parsing and rendering for headings, lists, code blocks and tables; this introduces components before the file panel, does not cover every Markdown dialect, and parser timings do not measure complete UI latency."
+        ]
+      }
+    },
+    {
       "version": "1.38.0",
       "date": "2026-10-30",
       "baseRevision": "b06cd82f08c0eeca4b77593ef87df8006c6998e8",
-      "endRevision": null,
+      "endRevision": "b3f66c7c4fc0b465b2506e8e0317c59bf8cba4f9",
       "change": {
         "id": "syntax-highlighting-service",
         "category": "added"
