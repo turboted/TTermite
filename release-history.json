@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.28.0",
+      "date": "2026-10-30",
+      "baseRevision": "6c62af9a6d3ac8cdbbab7011bd779928c6503fe4",
+      "endRevision": null,
+      "change": {
+        "id": "daily-command-report-view",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "每日命令報告視圖",
+        "zh-Hans": "每日命令报告视图",
+        "en": "Daily command report view"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入按主機與目錄整理當日命令的報告視圖，保留失敗命令與退出碼，方便回顧或複製；本版先提供報告視圖，入口稍後接上，只涵蓋已保存的命令。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入按主机及目录整理当日命令的报告视图，保留失败命令与退出码，便于回顾或复制；本版先提供报告视图，入口稍后接入，仅包含已保存的命令。"
+        ],
+        "en": [
+          "[Added] Add a daily report view grouping recorded commands by host and directory while retaining failures and exit codes for review/copying; the entry is connected later and reports contain only stored commands."
+        ]
+      }
+    },
+    {
       "version": "1.27.0",
       "date": "2026-10-30",
       "baseRevision": "b7336ab1ede88bd689e25dfc41d2e719a72f153d",
-      "endRevision": null,
+      "endRevision": "6c62af9a6d3ac8cdbbab7011bd779928c6503fe4",
       "change": {
         "id": "command-history-search-view",
         "category": "added"
