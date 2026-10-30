@@ -10,6 +10,8 @@ import UniformTypeIdentifiers
 @Observable
 final class SessionManager {
     static let shared = SessionManager()
+    var isRestoringSnapshot = false
+    var restoreWarning: String?
     let directoryJumper = CommandPaletteController()
     let historySearch = CommandPaletteController()
 
@@ -548,6 +550,11 @@ final class SessionManager {
     func newTab(in directory: String? = nil) { open(spec: .localShell(directory: directory ?? "")) }
     func newTab(directory: String) { newTab(in: directory) }
 
+    func applyRestoredTabs(_ restored: [PaneTab], selectedIndex: Int) {
+        tabs = restored
+        selectedTabID = restored.indices.contains(selectedIndex) ? restored[selectedIndex].id : restored.first?.id
+    }
+
     // MARK: - 会话恢复
 
     private static let openTabsKey = "session.openTabs"
@@ -556,12 +563,14 @@ final class SessionManager {
     /// 自动化验收(临时库)不写:UserDefaults 不随 BERTH_TRANSIENT_STORE 隔离,
     /// 验收结束关全部标签会把用户真实的恢复列表覆写成空
     private func persistOpenTabs() {
+        persistSessionSnapshot()
         guard ProcessInfo.processInfo.environment["BERTH_TRANSIENT_STORE"] != "1" else { return }
         let ids = tabs.compactMap { session($0.root.firstLeaf)?.spec.hostID.uuidString }
         UserDefaults.standard.set(ids, forKey: Self.openTabsKey)
     }
 
     func restoreSessions(container: ModelContainer) async {
+        if restoreSessionSnapshot(container: container) { return }
         let enabled = UserDefaults.standard.object(forKey: SettingsKeys.restoreSessions) as? Bool ?? true
         guard enabled, tabs.isEmpty,
               let ids = UserDefaults.standard.stringArray(forKey: Self.openTabsKey),

@@ -356,6 +356,20 @@ final class TerminalSession: Identifiable {
             exitCode: code, duration: lastCommandDuration, branch: localWorkingDirectory.flatMap(GitProbe.branch), hostKey: historyHostKey)
         pendingCommandText = ""
     }
+    func snapshotScrollback(maxLines: Int = 1000) -> String {
+        refreshScrollInvariantBounds()
+        return extractText(from: max(siLower, siUpper - maxLines), to: siUpper)
+    }
+    func prepareRestoredDirectory(_ directory: String) {
+        guard !spec.isLocal, directory.hasPrefix("/"), !directory.contains("\0") else { return }
+        lastRemoteDirectory = directory
+        restoreDirOnConnect = directory
+    }
+    func restoreScrollback(_ text: String) {
+        guard !text.isEmpty else { return }
+        // feed as plain text; never execute saved content or replay OSC control sequences.
+        terminalView.feed(text: ANSI.strip(text).replacingOccurrences(of: "\n", with: "\r\n") + "\r\n── 已恢復先前內容；目前是新的連線 ──\r\n")
+    }
     private func runSerialSession() async throws {
         guard let device = spec.serialDevice, let fd = SerialPort.open(path: device, baud: spec.serialBaud) else {
             throw SessionError.localShellFailed(spec.serialDevice ?? "serial")
@@ -396,7 +410,7 @@ final class TerminalSession: Identifiable {
         isAutoReconnectScheduled = false
         // 重连(此前连过)且开启了恢复工作目录 → 连上后自动 cd 回上次目录
         let restoreEnabled = UserDefaults.standard.object(forKey: SettingsKeys.restoreWorkingDir) as? Bool ?? true
-        restoreDirOnConnect = (everConnected && restoreEnabled) ? lastRemoteDirectory : nil
+        restoreDirOnConnect = restoreEnabled ? (everConnected ? lastRemoteDirectory : restoreDirOnConnect) : nil
         state = spec.isLocal
             ? .connecting(detail: String(localized: "正在启动本地 Shell…"))
             : .connecting(detail: String(localized: "正在连接 \(spec.hostname):\(String(spec.port))…"))

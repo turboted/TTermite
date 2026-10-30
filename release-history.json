@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.29.0",
+      "date": "2026-10-30",
+      "baseRevision": "b02a3a538a1d55c598713fd48509b2854fba9e2d",
+      "endRevision": null,
+      "change": {
+        "id": "workspace-snapshot-restoration",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "保存與還原工作區畫面快照",
+        "zh-Hans": "保存与恢复工作区画面快照",
+        "en": "Persist and restore workspace snapshots"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 保存分頁、分割比例、焦點、工作目錄、視窗位置與保留的終端文字，啟動時重建布局並以新連線接續；不恢復仍在執行的程序，當時串列會話不納入快照，格式、大小與深度不符時改用一般還原。"
+        ],
+        "zh-Hans": [
+          "[新增] 保存标签页、分屏比例、焦点、工作目录、窗口位置及保留的终端文本，启动时重建布局并使用新连接继续；不恢复仍在运行的进程，当时串口会话不包含在快照内，格式、大小或深度不符时改用普通恢复。"
+        ],
+        "en": [
+          "[Added] Persist tabs, split ratios, focus, directories, window position and retained terminal text, recreating the layout with new connections on launch; running processes and serial sessions are not restored, and invalid format, size or depth falls back to ordinary restoration."
+        ]
+      }
+    },
+    {
       "version": "1.28.0",
       "date": "2026-10-30",
       "baseRevision": "6c62af9a6d3ac8cdbbab7011bd779928c6503fe4",
-      "endRevision": null,
+      "endRevision": "b02a3a538a1d55c598713fd48509b2854fba9e2d",
       "change": {
         "id": "daily-command-report-view",
         "category": "added"

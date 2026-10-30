@@ -79,6 +79,8 @@ final class PaneTab: Identifiable {
     var focusedID: UUID
     /// 广播输入:开启后当前标签所有分屏 pane 同步接收键入
     var isBroadcasting = false
+    var isMaximized = false
+    var isCarousel = false
     /// 用户自定义标签名(双击/右键 chip 重命名);nil = 跟随聚焦会话的主机名
     var customTitle: String?
     /// 各分支的分割比例(branch id → first 侧占比),缺省 0.5。
