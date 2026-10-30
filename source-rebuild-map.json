@@ -3,12 +3,22 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.20.0",
+      "changeID": "option-click-cursor",
+      "originalRevision": "770b90a28a788bf6a7f01039e95435312991f60d",
+      "previousReconstructionRevision": "e372d14cfc68f2e290701aaf6be7a84127452688",
+      "previousReconstructionVersion": "0.1.6",
+      "rebuildRevision": null,
+      "paths": [],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.19.2",
       "changeID": "precise-terminal-scrolling",
       "originalRevision": "770b90a28a788bf6a7f01039e95435312991f60d",
       "previousReconstructionRevision": "e372d14cfc68f2e290701aaf6be7a84127452688",
       "previousReconstructionVersion": "0.1.6",
-      "rebuildRevision": null,
+      "rebuildRevision": "928da903810e07b4c4d4afa8b6b6749f18ffc47e",
       "paths": [],
       "status": "awaitingIndependentValidation"
     },

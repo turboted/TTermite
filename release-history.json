@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.20.0",
+      "date": "2026-10-30",
+      "baseRevision": "928da903810e07b4c4d4afa8b6b6749f18ffc47e",
+      "endRevision": null,
+      "change": {
+        "id": "option-click-cursor",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Option 點擊移動命令列游標",
+        "zh-Hans": "Option 点击移动命令行光标",
+        "en": "Option-click command cursor positioning"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] Option 點擊以方向鍵移動到終端中的點擊位置，協助編輯目前命令；僅在已連線、一般畫面且未啟用滑鼠回報時生效，並限制單次移動量。"
+        ],
+        "zh-Hans": [
+          "[新增] Option 点击通过方向键移动到终端中的点击位置，辅助编辑当前命令；仅在已连接、普通屏幕且未启用鼠标报告时生效，并限制单次移动量。"
+        ],
+        "en": [
+          "[Added] Use Option-click to send cursor movement toward a terminal position when editing a command; this requires a connected session, normal screen and disabled mouse reporting, with a cap on movement per click."
+        ]
+      }
+    },
+    {
       "version": "1.19.2",
       "date": "2026-10-30",
       "baseRevision": "3485df41597fe6e1e0010dc82d1b70c06d1d4710",
-      "endRevision": null,
+      "endRevision": "928da903810e07b4c4d4afa8b6b6749f18ffc47e",
       "change": {
         "id": "precise-terminal-scrolling",
         "category": "improved"
