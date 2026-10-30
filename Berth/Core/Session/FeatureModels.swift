@@ -69,3 +69,12 @@ enum GitProbe {
             : dir.appendingPathComponent(gitdir).standardizedFileURL
     }
 }
+
+/// 结构化输出格式
+enum StructuredOutputFormat: String {
+    case json, csv, tsv
+
+    var separator: String { self == .tsv ? "\t" : "," }
+    var label: String { self == .json ? "JSON" : String(localized: "表格") }
+    var symbol: String { self == .json ? "curlybraces" : "tablecells" }
+}

@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.13.0",
+      "date": "2026-10-30",
+      "baseRevision": "fb8a21e3eb7ed054847890ef98f1a78bfe15d2fe",
+      "endRevision": null,
+      "change": {
+        "id": "structured-output-detection",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "結構化輸出解析服務",
+        "zh-Hans": "结构化输出解析服务",
+        "en": "Structured-output parsing service"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 辨識 JSON、CSV、TSV，並解析引號與跨行欄位，讓後續輸出面板可用表格呈現資料；偵測會抽樣並限制解析列數，目前尚未連接終端輸出與面板。"
+        ],
+        "zh-Hans": [
+          "[新增] 识别 JSON、CSV、TSV，并解析引号与跨行字段，供后续输出面板用表格展示数据；检测会采样并限制解析行数，目前尚未连接终端输出与面板。"
+        ],
+        "en": [
+          "[Added] Detect JSON, CSV and TSV and parse quoted or multiline fields for later structured views; detection samples rows and parsing is bounded, with terminal capture and panels connected later."
+        ]
+      }
+    },
+    {
       "version": "1.12.0",
       "date": "2026-10-30",
       "baseRevision": "07a2bfc61b78a6aa765e24aba3b454100c0be2dc",
-      "endRevision": null,
+      "endRevision": "fb8a21e3eb7ed054847890ef98f1a78bfe15d2fe",
       "change": {
         "id": "directory-visit-history",
         "category": "added"
