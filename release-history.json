@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.4.0",
+      "date": "2026-10-30",
+      "baseRevision": "2eac88ae1e4e11f1dea53ca7a77f362cc5b09ef7",
+      "endRevision": null,
+      "change": {
+        "id": "intraline-diff-emphasis",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "標示行內變動區段",
+        "zh-Hans": "标示行内变化区段",
+        "en": "Calculate intraline diff emphasis"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 新增行內變動區段計算，利用共同前後綴找出重點差異，讓後續面板能強調修改位置；接近整行重寫時省略強調，目前尚未接上介面。"
+        ],
+        "zh-Hans": [
+          "[新增] 新增行内变化区段计算，利用共同前后缀找出重点差异，让后续面板能突出修改位置；接近整行重写时省略强调，目前尚未接入界面。"
+        ],
+        "en": [
+          "[Added] Calculate changed character ranges by common prefixes and suffixes so later panels can emphasize edits; near-total line rewrites suppress emphasis and the UI is not connected yet."
+        ]
+      }
+    },
+    {
       "version": "1.3.0",
       "date": "2026-10-30",
       "baseRevision": "2b49895cb35bf7dfa314e8ac61b7f06d48e7b9c2",
-      "endRevision": null,
+      "endRevision": "2eac88ae1e4e11f1dea53ca7a77f362cc5b09ef7",
       "change": {
         "id": "unified-diff-parsing",
         "category": "added"

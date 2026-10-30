@@ -3,12 +3,24 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.4.0",
+      "changeID": "intraline-diff-emphasis",
+      "originalRevision": "b3688eb7a6ab356c0145665eea1d83b7d2443545",
+      "previousReconstructionRevision": "2667ab7236594e34e01f04e687a1e4603de766fc",
+      "previousReconstructionVersion": "0.1.3",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/Core/Git/IntralineDiff.swift"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.3.0",
       "changeID": "unified-diff-parsing",
       "originalRevision": "b3688eb7a6ab356c0145665eea1d83b7d2443545",
       "previousReconstructionRevision": "2667ab7236594e34e01f04e687a1e4603de766fc",
       "previousReconstructionVersion": "0.1.3",
-      "rebuildRevision": null,
+      "rebuildRevision": "2eac88ae1e4e11f1dea53ca7a77f362cc5b09ef7",
       "paths": [
         "Berth/Core/Git/UnifiedDiff.swift"
       ],
