@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.35.0",
+      "date": "2026-10-30",
+      "baseRevision": "6ccc86932d7e81c8f509fe6529bc3c83b4043ea8",
+      "endRevision": null,
+      "change": {
+        "id": "git-graph-view",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "Git 分支提交圖視圖",
+        "zh-Hans": "Git 分支提交图视图",
+        "en": "Git branch graph view"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入可搜尋的提交圖與分支線路，選擇提交後可查看檔案與差異；本版先提供視圖，主視窗入口稍後接入，尚未排除後續修正所處理的內部快照 refs。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入可搜索的提交图与分支线路，选择提交后可查看文件及差异；本版先提供视图，主窗口入口稍后接入，尚未排除后续修复处理的内部快照 refs。"
+        ],
+        "en": [
+          "[Added] Add a searchable commit graph with branch lanes and selected-commit file/diff inspection; the main-window entry comes later and internal snapshot refs are not yet filtered by the later fix."
+        ]
+      }
+    },
+    {
       "version": "1.34.0",
       "date": "2026-10-30",
       "baseRevision": "a8e3af429182bdaf1b2c4d799bcffeb2d908522c",
-      "endRevision": null,
+      "endRevision": "6ccc86932d7e81c8f509fe6529bc3c83b4043ea8",
       "change": {
         "id": "git-file-history-view",
         "category": "added"
