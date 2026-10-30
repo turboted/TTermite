@@ -3,12 +3,25 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.22.0",
+      "changeID": "terminal-regex-search",
+      "originalRevision": "751cad1ea6aaa368ffdd56a78c72dec596950dd9",
+      "previousReconstructionRevision": "feec160bb2565560839a4e0d920d118682538039",
+      "previousReconstructionVersion": "0.1.7",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/Features/Terminal/TerminalSearch.swift",
+        "Berth/Features/Terminal/TerminalTabsView.swift"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.21.0",
       "changeID": "command-click-file-links",
       "originalRevision": "770b90a28a788bf6a7f01039e95435312991f60d",
       "previousReconstructionRevision": "e372d14cfc68f2e290701aaf6be7a84127452688",
       "previousReconstructionVersion": "0.1.6",
-      "rebuildRevision": null,
+      "rebuildRevision": "0ec139c8eebc505bac83145ae155870a4d7af42a",
       "paths": [],
       "status": "awaitingIndependentValidation"
     },

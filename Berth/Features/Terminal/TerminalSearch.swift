@@ -1,76 +1,93 @@
+import AppKit
 import SwiftTerm
 import SwiftUI
 
-/// scrollback 搜索:扫描滚动缓冲全部行,匹配行可上下跳转(滚动定位)。
-/// SwiftTerm 未公开高亮 API,MVP 用滚动定位到命中行;完整高亮留作后续细化。
+/// scrollback 搜索:走 SwiftTerm 内置搜索引擎(选区高亮 + 滚动定位),支持大小写/正则。
 @MainActor
 @Observable
 final class TerminalSearchModel {
     var query = ""
-    private(set) var matches: [Int] = []   // scroll-invariant row 号
-    private(set) var currentIndex = 0
-    private(set) var totalScanned = 0
+    var caseSensitive = false
+    var useRegex = false
+    private(set) var matchIndex = 0
+    private(set) var matchTotal = 0
+    private(set) var searched = false
 
     weak var terminalView: TerminalView?
 
+    /// 搜索期间暂存的终端状态(关闭时还原)
+    private var savedMouseReporting: Bool?
+    private var savedSelectionColor: NSColor?
+
+    /// 搜索打开时接管终端两处状态:
+    /// 1. 关 allowMouseReporting——SwiftTerm 的 feedPrepare 在它开着时逢输出就清
+    ///    选区,pane 里有 TUI 在刷屏(spinner/时钟)高亮设上即被抹掉;
+    /// 2. 选区色换成「强调色对半调向背景」的高对比色——主题选区色贴着背景
+    ///    (如默认 #2A3350),当搜索高亮几乎看不见。用实色不用 alpha,
+    ///    CoreGraphics 与 Metal 两条渲染路径表现一致
+    func activate() {
+        guard let terminalView, savedMouseReporting == nil else { return }
+        savedMouseReporting = terminalView.allowMouseReporting
+        savedSelectionColor = terminalView.selectedTextBackgroundColor
+        terminalView.allowMouseReporting = false
+        let theme = ThemeStore.shared.current
+        let accent = NSColor(hex: theme.accent)
+        terminalView.selectedTextBackgroundColor =
+            accent.blended(withFraction: 0.5, of: theme.backgroundNSColor) ?? accent
+    }
+
     var statusText: String {
-        if query.isEmpty { return "" }
-        if matches.isEmpty { return String(localized: "无匹配") }
-        return "\(currentIndex + 1) / \(matches.count)"
+        guard searched, !query.isEmpty else { return "" }
+        if matchTotal == 0 { return String(localized: "无匹配") }
+        return "\(matchIndex + 1) / \(matchTotal)"
     }
 
-    func update(query: String) {
-        self.query = query
-        recompute()
+    private var options: SearchOptions {
+        SearchOptions(caseSensitive: caseSensitive, regex: useRegex, wholeWord: false)
     }
 
-    func recompute() {
-        matches = []
-        currentIndex = 0
-        guard let terminalView, !query.isEmpty else { return }
-        let terminal = terminalView.getTerminal()
-        let needle = query.lowercased()
-
-        // scroll-invariant 行是连续区间,从命中的第一行向两端扩展找到边界
-        var lower = 0
-        while terminal.getScrollInvariantLine(row: lower - 1) != nil, lower > -100_000 { lower -= 1 }
-        var upper = 0
-        while terminal.getScrollInvariantLine(row: upper) != nil, upper < 100_000 { upper += 1 }
-
-        var found: [Int] = []
-        for row in lower..<upper {
-            guard let line = terminal.getScrollInvariantLine(row: row) else { continue }
-            if line.translateToString(trimRight: true).lowercased().contains(needle) {
-                found.append(row)
-            }
-        }
-        totalScanned = upper - lower
-        matches = found
-        if !matches.isEmpty {
-            currentIndex = matches.count - 1 // 默认定位到最近(最下)一条
-            scrollToCurrent()
-        }
+    /// 查询/选项变化:重新从头搜索
+    func update() {
+        guard let terminalView else { return }
+        terminalView.clearSearch()
+        searched = false
+        matchIndex = 0
+        matchTotal = 0
+        guard !query.isEmpty else { return }
+        _ = terminalView.findNext(query, options: options)
+        refreshSummary()
+        searched = true
     }
 
     func next() {
-        guard !matches.isEmpty else { return }
-        currentIndex = (currentIndex + 1) % matches.count
-        scrollToCurrent()
+        guard let terminalView, !query.isEmpty else { return }
+        _ = terminalView.findNext(query, options: options)
+        refreshSummary()
     }
 
     func previous() {
-        guard !matches.isEmpty else { return }
-        currentIndex = (currentIndex - 1 + matches.count) % matches.count
-        scrollToCurrent()
+        guard let terminalView, !query.isEmpty else { return }
+        _ = terminalView.findPrevious(query, options: options)
+        refreshSummary()
     }
 
-    private func scrollToCurrent() {
-        guard let terminalView, matches.indices.contains(currentIndex), totalScanned > 1 else { return }
-        let row = matches[currentIndex]
-        var lower = 0
-        while terminalView.getTerminal().getScrollInvariantLine(row: lower - 1) != nil, lower > -100_000 { lower -= 1 }
-        let position = Double(row - lower) / Double(max(totalScanned - 1, 1))
-        terminalView.scroll(toPosition: min(max(position, 0), 1))
+    func close() {
+        if let saved = savedMouseReporting { terminalView?.allowMouseReporting = saved }
+        if let color = savedSelectionColor { terminalView?.selectedTextBackgroundColor = color }
+        savedMouseReporting = nil
+        savedSelectionColor = nil
+        terminalView?.clearSearch()
+        query = ""
+        searched = false
+        matchIndex = 0
+        matchTotal = 0
+    }
+
+    private func refreshSummary() {
+        guard let terminalView else { return }
+        let summary = terminalView.searchMatchSummary(query, options: options)
+        matchIndex = max(summary.index - 1, 0)
+        matchTotal = summary.total
     }
 }
 
@@ -79,36 +96,49 @@ struct TerminalSearchBar: View {
     @Bindable var model: TerminalSearchModel
     let onClose: () -> Void
 
-    @FocusState private var isFocused: Bool
-
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
-            TextField("在回滚缓冲中搜索", text: $model.query)
-                .textFieldStyle(.plain)
-                .focused($isFocused)
-                .onSubmit { model.next() }
-                .onChange(of: model.query) { _, newValue in
-                    model.update(query: newValue)
-                }
-                .frame(width: 220)
+            PaletteTextField(
+                text: $model.query,
+                placeholder: String(localized: "在回滚缓冲中搜索"),
+                onMoveUp: { model.previous() },
+                onMoveDown: { model.next() },
+                onSubmit: { model.next() },
+                onCancel: { onClose() }
+            )
+            .frame(width: 200, height: 20)
+            .onChange(of: model.query) { _, _ in model.update() }
+
             Text(model.statusText)
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(minWidth: 56, alignment: .leading)
+
+            Toggle("Aa", isOn: $model.caseSensitive)
+                .toggleStyle(.button)
+                .font(.caption)
+                .help("区分大小写")
+                .onChange(of: model.caseSensitive) { _, _ in model.update() }
+            Toggle(".*", isOn: $model.useRegex)
+                .toggleStyle(.button)
+                .font(.caption.monospaced())
+                .help("正则表达式")
+                .onChange(of: model.useRegex) { _, _ in model.update() }
+
             Button {
                 model.previous()
             } label: {
                 Image(systemName: "chevron.up")
             }
-            .disabled(model.matches.isEmpty)
+            .disabled(model.matchTotal == 0)
             Button {
                 model.next()
             } label: {
                 Image(systemName: "chevron.down")
             }
-            .disabled(model.matches.isEmpty)
+            .disabled(model.matchTotal == 0)
             Button {
                 onClose()
             } label: {
@@ -125,6 +155,5 @@ struct TerminalSearchBar: View {
                 .shadow(color: .black.opacity(0.2), radius: 8, y: 3)
         )
         .padding(.top, 8)
-        .onAppear { isFocused = true }
     }
 }

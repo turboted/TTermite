@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.22.0",
+      "date": "2026-10-30",
+      "baseRevision": "0ec139c8eebc505bac83145ae155870a4d7af42a",
+      "endRevision": null,
+      "change": {
+        "id": "terminal-regex-search",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "終端搜尋大小寫與正則選項",
+        "zh-Hans": "终端搜索大小写与正则选项",
+        "en": "Case-sensitive and regex terminal search"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 終端搜尋改用引擎的選取高亮與定位，加入大小寫及正則選項，關閉時還原滑鼠回報與選取色；無效正則顯示無結果，搜尋範圍仍受保留的回捲內容限制。"
+        ],
+        "zh-Hans": [
+          "[新增] 终端搜索采用引擎的选区高亮与定位，加入大小写及正则选项，关闭时恢复鼠标报告与选区颜色；无效正则显示无结果，搜索范围仍受保留的回滚内容限制。"
+        ],
+        "en": [
+          "[Added] Use engine-backed highlighting and navigation with case-sensitive and regex options, restoring mouse reporting and selection color on close; invalid regex yields no results and search is limited to retained scrollback."
+        ]
+      }
+    },
+    {
       "version": "1.21.0",
       "date": "2026-10-30",
       "baseRevision": "4960bca6f5db40cb3f579d1e53e7e483ec652557",
-      "endRevision": null,
+      "endRevision": "0ec139c8eebc505bac83145ae155870a4d7af42a",
       "change": {
         "id": "command-click-file-links",
         "category": "added"

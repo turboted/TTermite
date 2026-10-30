@@ -824,7 +824,7 @@ struct TerminalPaneView: View {
                     Spacer()
                     TerminalSearchBar(model: searchModel) {
                         isSearchActive = false
-                        searchModel.update(query: "")
+                        searchModel.close()
                         session.focusTerminal()
                     }
                     .padding(.trailing, 12)
@@ -885,6 +885,7 @@ struct TerminalPaneView: View {
             // 只有当前选中会话响应 ⌘F
             guard session.id == sessionManager.selectedID else { return }
             searchModel.terminalView = session.terminalView
+            searchModel.activate()
             isSearchActive = true
         }
         .sheet(
