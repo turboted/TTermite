@@ -3,12 +3,36 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.1.0",
+      "changeID": "bundled-nerd-fonts",
+      "originalRevision": "517f1827ba1f6294ac42d3d96db33b7b137a6762",
+      "previousReconstructionRevision": "cec444e7da7451946acf9bf4579f5f14f62d005e",
+      "previousReconstructionVersion": "0.1.2",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/App/BerthApp.swift",
+        "Berth/Core/Terminal/BundledFonts.swift",
+        "Berth/Core/Terminal/FontPrefs.swift",
+        "Berth/Core/Terminal/TerminalFontPrefs.swift",
+        "Berth/Debug/LocalShellAcceptanceTest.swift",
+        "Berth/Resources/Fonts/JetBrainsMono-LICENSE.txt",
+        "Berth/Resources/Fonts/JetBrainsMonoNerdFont-Bold.ttf",
+        "Berth/Resources/Fonts/JetBrainsMonoNerdFont-BoldItalic.ttf",
+        "Berth/Resources/Fonts/JetBrainsMonoNerdFont-Italic.ttf",
+        "Berth/Resources/Fonts/JetBrainsMonoNerdFont-Regular.ttf",
+        "Berth/Resources/Fonts/Symbols-LICENSE.txt",
+        "Berth/Resources/Fonts/SymbolsNerdFont-Regular.ttf",
+        "Berth/Resources/Legal/TTermite-GPL-3.0.txt"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.0.0",
       "originalRevision": "58c1345946258fc4abd1fa0ee94e453a1ebd296a",
       "originalAppVersion": "0.1.0",
       "previousReconstructionRevision": "be6a2663502f1be7e15fc2e21a7bd2f6da0700c2",
       "previousReconstructionVersion": "0.1.1",
-      "rebuildRevision": null,
+      "rebuildRevision": "0ec9616864b858155e7ce19b3e25da39cb39da2a",
       "bootstrapSources": {
         "buildValidation": "b0350253eb586c8fcef1cfc8e250d78878c9eac0",
         "dependencyInventory": "8a23ef70d798a91dcee892358ec44f510b5f55b7"

@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-10-30",
+      "baseRevision": "0ec9616864b858155e7ce19b3e25da39cb39da2a",
+      "endRevision": null,
+      "change": {
+        "id": "bundled-nerd-fonts",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "內建 Nerd Fonts 與符號回退",
+        "zh-Hans": "内置 Nerd Fonts 与符号回退",
+        "en": "Bundled Nerd Fonts and symbol fallback"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 隨 App 提供 JetBrainsMono Nerd Font 的四種字面與 Symbols Nerd Font，讓預設終端及自選字型能顯示常用開發圖示，不必先手動安裝字型；自選非 Nerd 字型的粗體符號仍可能因系統派生字型丟失級聯屬性而缺字，內建字型不受此限制。"
+        ],
+        "zh-Hans": [
+          "[新增] 随 App 提供 JetBrainsMono Nerd Font 的四种字面与 Symbols Nerd Font，让默认终端及自选字体能够显示常用开发图标，无需先手动安装字体；自选非 Nerd 字体的粗体符号仍可能因系统派生字体丢失级联属性而缺字，内置字体不受此限制。"
+        ],
+        "en": [
+          "[Added] Bundle four JetBrainsMono Nerd Font faces and Symbols Nerd Font so the default terminal and custom-font fallback can show common developer icons without a separate font installation; bold symbols in custom non-Nerd fonts may still lose fallback attributes when the system derives a bold face, while the bundled family is unaffected."
+        ]
+      }
+    },
+    {
       "version": "1.0.0",
       "date": "2026-10-30",
       "baseRevision": null,
-      "endRevision": null,
+      "endRevision": "0ec9616864b858155e7ce19b3e25da39cb39da2a",
       "change": {
         "id": "baseline-earliest-ttermite",
         "category": "added"

@@ -5,6 +5,7 @@ import SwiftUI
 /// NSStatusItem 必须等 NSApplicationMain 起来再建(App.init 里创建会偶发启动卡死)
 final class BerthAppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
+        BundledFonts.register()
         MenuBarItemController.shared.start()
         Task { _ = try? await SFTPDragStagingStore.shared.sweepStale() }
         Task.detached { _ = try? DownloadDestinationTransaction.sweepOrphans() }
@@ -18,6 +19,7 @@ struct BerthApp: App {
     private let sessionManager = SessionManager.shared
 
     init() {
+        BundledFonts.register()
         // 旧位置的机密改为按需迁移(见 KeychainStore.adoptLegacyItem),启动时不再扫钥匙串
         // 尽早订阅 CloudKit 同步事件
         _ = CloudSyncMonitor.shared

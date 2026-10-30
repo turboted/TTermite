@@ -15,6 +15,10 @@ enum LocalShellAcceptanceTest {
         guard env["BERTH_LOCAL_AUTOTEST"] == "1",
               let dumpBase = env["BERTH_TEST_DUMP"] else { return }
 
+        // The arithmetic/size probes require a POSIX-style initial shell.
+        // The existing matrix below independently tests zsh, bash and fish.
+        UserDefaults.standard.set("/bin/zsh", forKey: SettingsKeys.localShellPath)
+        defer { UserDefaults.standard.removeObject(forKey: SettingsKeys.localShellPath) }
         var log: [String] = []
         func mark(_ step: String) {
             log.append(step)
@@ -128,6 +132,8 @@ enum LocalShellAcceptanceTest {
         }
         UserDefaults.standard.removeObject(forKey: SettingsKeys.localShellPath)
 
+        UserDefaults.standard.set("/bin/zsh", forKey: SettingsKeys.localShellPath)
+
         // 5c. issue #41:标签标题跟随本地当前目录 / ⌘T 继承目录 / 书签起始目录+启动命令 / 切标签焦点
         guard await issue41Checks(manager: manager, first: session, mark: mark) else { return }
 
@@ -192,7 +198,7 @@ enum LocalShellAcceptanceTest {
         let startupOK = await waitFor(timeout: 5) { bufferText(marked).contains("BERTH_BOOKMARK_42") }
         marked.sendText("pwd\n")
         let realProject = projectDir.resolvingSymlinksInPath().path
-        let pwdOK = await waitFor(timeout: 5) { bufferText(marked).contains(realProject) || bufferText(marked).contains(projectDir.path + "\n") }
+        let pwdOK = await waitFor(timeout: 5) { bufferText(marked).replacingOccurrences(of: "\n", with: "").replacingOccurrences(of: "\r", with: "").contains(realProject) }
         let titleOK = marked.tabTitle == "Alpha 项目"
         mark(startupOK && pwdOK && titleOK
              ? "BOOKMARK_OK"

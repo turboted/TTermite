@@ -16,16 +16,7 @@ enum TerminalFontPrefs {
 
     /// 当前偏好对应的字体;所选字体族已卸载时回落到系统等宽
     static func resolved(size: CGFloat = size) -> NSFont {
-        let family = family
-        if !family.isEmpty {
-            if let font = NSFontManager.shared.font(withFamily: family, traits: [], weight: 5, size: size) {
-                return font
-            }
-            if let font = NSFont(name: family, size: size) {
-                return font
-            }
-        }
-        return .monospacedSystemFont(ofSize: size, weight: .regular)
+        return NSFont(descriptor: FontPrefs.font().fontDescriptor, size: size) ?? .monospacedSystemFont(ofSize: size, weight: .regular)
     }
 
     @MainActor
