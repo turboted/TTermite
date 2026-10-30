@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.11.0",
+      "date": "2026-10-30",
+      "baseRevision": "0868e9a793fcbe916413bb62cca677c8409bb1bd",
+      "endRevision": null,
+      "change": {
+        "id": "persistent-command-history",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "持久化命令歷史服務",
+        "zh-Hans": "持久化命令历史服务",
+        "en": "Persistent command-history service"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 加入 SQLite 命令歷史，可保存命令、目錄、主機、退出碼與耗時並搜尋；本版建立資料服務，終端命令自動記錄與搜尋介面會分別於後續接入。"
+        ],
+        "zh-Hans": [
+          "[新增] 加入 SQLite 命令历史，可保存命令、目录、主机、退出码与耗时并搜索；本版建立数据服务，终端命令自动记录与搜索界面分别在后续接入。"
+        ],
+        "en": [
+          "[Added] Add SQLite storage and search for commands, directories, hosts, exit codes and durations; this version establishes storage, with automatic terminal capture and the search UI connected separately later."
+        ]
+      }
+    },
+    {
       "version": "1.10.0",
       "date": "2026-10-30",
       "baseRevision": "f55a0a96af929d6bd92d84d0eac46ae691aeadb0",
-      "endRevision": null,
+      "endRevision": "0868e9a793fcbe916413bb62cca677c8409bb1bd",
       "change": {
         "id": "listening-port-discovery",
         "category": "added"
