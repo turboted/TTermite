@@ -3,12 +3,24 @@
   "description": "Current-date single-change reconstruction. Original development and prior reconstruction refs remain untouched; metadata never certifies a build.",
   "versions": [
     {
+      "version": "1.12.0",
+      "changeID": "directory-visit-history",
+      "originalRevision": "c3cb13e678c0c8d644038f4f1392dcc04c12a87c",
+      "previousReconstructionRevision": "e013109c5b1ac628edde0229db40164e435791f8",
+      "previousReconstructionVersion": "0.1.5",
+      "rebuildRevision": null,
+      "paths": [
+        "Berth/Core/Session/DirectoryHistory.swift"
+      ],
+      "status": "awaitingIndependentValidation"
+    },
+    {
       "version": "1.11.0",
       "changeID": "persistent-command-history",
       "originalRevision": "c3cb13e678c0c8d644038f4f1392dcc04c12a87c",
       "previousReconstructionRevision": "e013109c5b1ac628edde0229db40164e435791f8",
       "previousReconstructionVersion": "0.1.5",
-      "rebuildRevision": null,
+      "rebuildRevision": "07a2bfc61b78a6aa765e24aba3b454100c0be2dc",
       "paths": [
         "Berth/Core/Session/CommandHistoryStore.swift",
         "BerthTests/CommandHistoryStoreTests.swift"

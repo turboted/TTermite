@@ -4,10 +4,40 @@
   "historyBaseRevision": null,
   "releases": [
     {
+      "version": "1.12.0",
+      "date": "2026-10-30",
+      "baseRevision": "07a2bfc61b78a6aa765e24aba3b454100c0be2dc",
+      "endRevision": null,
+      "change": {
+        "id": "directory-visit-history",
+        "category": "added"
+      },
+      "status": "reconstructedSource",
+      "titles": {
+        "zh-Hant": "目錄造訪歷史服務",
+        "zh-Hans": "目录访问历史服务",
+        "en": "Directory visit-history service"
+      },
+      "noteCategories": [
+        "added"
+      ],
+      "notes": {
+        "zh-Hant": [
+          "[新增] 保存主機分開的目錄造訪次數與時間，以頻率與近期程度排序並支援模糊查詢；本版尚未自動接收終端目錄事件，目錄跳轉器也尚未接上。"
+        ],
+        "zh-Hans": [
+          "[新增] 保存按主机区分的目录访问次数与时间，按频率及近期程度排序并支持模糊查询；本版尚未自动接收终端目录事件，目录跳转器也尚未接入。"
+        ],
+        "en": [
+          "[Added] Store host-specific directory visits and rank them by frequency and recency with fuzzy queries; terminal directory events and the directory-jumper UI are not connected yet."
+        ]
+      }
+    },
+    {
       "version": "1.11.0",
       "date": "2026-10-30",
       "baseRevision": "0868e9a793fcbe916413bb62cca677c8409bb1bd",
-      "endRevision": null,
+      "endRevision": "07a2bfc61b78a6aa765e24aba3b454100c0be2dc",
       "change": {
         "id": "persistent-command-history",
         "category": "added"
